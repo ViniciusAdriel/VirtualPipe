@@ -1,0 +1,99 @@
+import { AboutSlint, VerticalBox, LineEdit, HorizontalBox, Button, ComboBox } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+
+    title: "VirtualPipe";
+
+    callback create_pipe(string, string, string);
+    callback remove_pipe(string, string) -> bool;
+
+    callback fix_text(string) -> string;
+    callback set_status(string);
+    in property <string> status;
+
+    in-out property <int> page_idx;
+
+    if page_idx == 0: VerticalBox {
+        padding-left: 20px;
+        padding-right: 20px;
+
+        Rectangle {}
+        sink:=LineEdit {
+            placeholder-text: "Sink name";
+            changed text => {
+                self.text = fix_text(self.text)
+            }
+        }
+        source:=LineEdit {
+            placeholder-text: "Source name";
+            changed text => {
+                self.text = fix_text(self.text)
+            }
+        }
+        HorizontalBox {
+            padding: 0;
+            Rectangle {}
+            type:= ComboBox {
+                model: ["Mono", "Stereo"];
+                current-index: 1;
+            }
+            Button {
+                text: "Create";
+                clicked => {
+                    create_pipe(type.current-value, sink.text, source.text);
+                }
+            }
+            Button {
+                text: "Remove";
+                clicked => {
+                    if remove_pipe(sink.text, source.text) {
+                        sink.text = "";
+                        source.text = "";
+                    };
+                }
+            }
+            Rectangle {}
+        }
+        if status != "": Text {
+            text: status;
+            horizontal-alignment: center;
+            opacity: 0.5;
+        }
+        Rectangle {}
+        TouchArea {
+            Text {
+                width: 100%;
+                text: "VirtualPipe 1.0";
+                opacity: 0.5;
+                horizontal-alignment: right;
+            }
+            double-clicked => {
+                page_idx = 1;
+            }
+        }
+    }
+
+    if page_idx == 1: VerticalBox {
+        HorizontalBox {
+            height: self.min-height;
+            padding: 0;
+            Button {
+                text: "Back";
+                clicked => {
+                    page_idx = 0;
+                }
+            }
+            Rectangle {}
+        }
+        Text {
+            text: "VirtualPipe 1.0\n"+
+                  "By.: Vinícius Adriel";
+        }
+        
+        HorizontalLayout {
+            Rectangle {}
+            AboutSlint {}
+            Rectangle {}
+        }
+    }
+}

@@ -3,6 +3,8 @@ import { AboutSlint, VerticalBox, LineEdit, HorizontalBox, Button, ComboBox } fr
 export component MainWindow inherits Window {
 
     title: "VirtualPipe";
+    min-width: 420px;
+    min-height: 210px;
 
     callback create_pipe(string, string, string);
     callback remove_pipe(string, string) -> bool;

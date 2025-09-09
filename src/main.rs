@@ -63,9 +63,11 @@ fn main()
             let mw = mw.as_weak();
             spawn_local(async move {
                 let mw = mw.upgrade().unwrap();
-                mw.set_status(text);
+                mw.set_status(text.clone());
                 slint::Timer::single_shot(Duration::from_secs_f32(2.0), move || {
-                    mw.set_status("".into());
+                    if mw.get_status() == text {
+                        mw.set_status("".into());
+                    }
                 });
             }).unwrap();
         }

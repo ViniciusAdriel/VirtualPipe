@@ -1,6 +1,23 @@
 # VirtualPipe
-**A GUI utility to create and manage virtual audio cables in PipeWire.**
+**A GUI utility to create and manage virtual audio cables in PipeWire.**  
+  
+> [!IMPORTANT]
+> Requires **pw-link** and **pactl** that can be provided by:  
+>    
+> **Debian/Ubuntu:**
+> ```bash
+> sudo apt install pipewire pipewire-pulse pulseaudio-utils
+>  ```
+> **Fedora:**
+> ```bash
+> sudo dnf install pipewire pipewire-pulseaudio  
+> ```
+> **Arch:**
+> ```bash
+> sudo pacman -S pipewire pipewire-pulse
+> ```
 
+  
 ## What it does
 Create and remove virtual audio devices — a virtual input paired with a virtual output.
 

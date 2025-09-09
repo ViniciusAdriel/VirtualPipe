@@ -9,11 +9,15 @@ Capture your microphone's audio in OBS, apply processing (like noise filters), m
 For apps without built-in noise suppression, you can feed the processed audio through a virtual input.
 
 ## How to use it
-* In the first LineEdit, enter the name of your virtual output.
-* In the second LineEdit, enter the name of your virtual input.
-* Choose between stereo and mono in the combobox on the left.
-* Click Create.
+* In the first text field, enter the name of your virtual output.
+* In the second text field, enter the name of your virtual input.
+* Choose between stereo and mono in the drop-down menu.
+* Click Create.  
+  
 **Done!**
 
 Your virtual output will appear among your speakers or headphones.  
 Your virtual input will appear among your microphones.  
+
+> [!WARNING]
+> Virtual devices are temporary and will be removed after reboot.

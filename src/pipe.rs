@@ -99,10 +99,10 @@ pub fn get_id(
         let tabs = line.split('\t').collect::<Vec<&str>>();
 
         if tabs.contains(&"module-null-sink") {
-            if line.contains(&format!("sink_name={sink_name}")) {
+            if line.contains(&format!("sink_name={sink_name} ")) {
                 output.0 = tabs[0].to_string()
             }
-            if line.contains(&format!("sink_name={source_name}")) {
+            if line.contains(&format!("sink_name={source_name} ")) {
                 output.1 = tabs[0].to_string()
             }
 

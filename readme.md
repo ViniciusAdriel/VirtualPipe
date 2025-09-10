@@ -4,17 +4,9 @@
 > [!IMPORTANT]
 > Requires **pw-link** and **pactl** that can be provided by:  
 >    
-> **Debian/Ubuntu:**
-> ```bash
-> sudo apt install pipewire pipewire-pulse pulseaudio-utils
->  ```
 > **Fedora:**
 > ```bash
-> sudo dnf install pipewire pipewire-pulseaudio  
-> ```
-> **Arch:**
-> ```bash
-> sudo pacman -S pipewire pipewire-pulse
+> dnf install pipewire-utils pulseaudio-utils
 > ```
 
   

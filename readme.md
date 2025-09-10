@@ -11,6 +11,11 @@
 > ```
 > If no path is returned, install them with the following packages:  
 >  
+> **Debian/Ubuntu**
+> ```bash
+> apt install pulseaudio-utils # provides pactl
+> apt install pipewire         # provides pw-link
+> ```
 > **Fedora**
 > ```bash
 > dnf install pulseaudio-utils # provides pactl

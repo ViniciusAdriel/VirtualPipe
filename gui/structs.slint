@@ -1,0 +1,11 @@
+@rust-attr(derive(serde::Serialize, serde::Deserialize))
+export struct Pipe {
+    source: string,
+    sink: string,
+    channel: string
+}
+
+@rust-attr(derive(serde::Serialize, serde::Deserialize))
+export struct Config {
+    persist_after_reboot: bool
+}

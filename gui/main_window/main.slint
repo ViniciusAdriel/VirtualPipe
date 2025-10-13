@@ -1,0 +1,81 @@
+import { AboutSlint, VerticalBox, Palette, HorizontalBox, Button, CheckBox, ScrollView, LineEdit } from "std-widgets.slint";
+import { Pipe } from "../structs.slint";
+import { PipeList } from "pipe_list.slint";
+import { PipeEdit } from "pipe_edit.slint";
+
+export component MainWindow inherits Window
+{
+    title: "VirtualPipe";
+    min-height: 200px;
+    min-width: 300px;
+
+    in-out property <int> page;
+
+    in property <string> status;
+    property <int> name;
+
+    in property <[Pipe]> pipes;
+
+    callback create(Pipe, int) -> string;
+    callback remove(Pipe) -> string;
+    callback change(Pipe, Pipe) -> string;
+
+    callback set_status(string);
+    callback fix_text(string) -> string;
+
+
+    VerticalLayout {
+        Rectangle {
+            background: Palette.control-background;
+            height: status != "" ? self.min-height + 16px : 0px;
+            animate height {
+                 duration: 0.75s;
+                 easing: ease-out-elastic;
+            }
+            Text {
+                text: status;
+
+                vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+        if status != "": Rectangle {
+            background: Palette.border;
+            height: 1px;
+        }
+        
+
+
+        // Page 0: Pipe List
+        property <Pipe> null_pipe;
+
+        if page == 0: PipeList {
+            pipes: pipes;
+            new_pipe() => {create(null_pipe, -1)}
+            edt_pipe(x) => {
+                pipe_to_edit = x;
+                page = 1;
+            }
+        }
+
+        // Page 1: Pipe Edit
+        property <Pipe> pipe_to_edit;
+
+        if page == 1: PipeEdit {
+            pipe: pipe_to_edit;
+            cancel => {
+                page = 0;
+            }
+            remove(x) => {
+                remove(x);
+            }
+            change(x,y) => {
+                change(x,y)
+            }
+            fix_text(x) => {
+                fix_text(x)
+            }
+        }   
+    }
+    
+}

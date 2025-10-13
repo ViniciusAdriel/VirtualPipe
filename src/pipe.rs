@@ -1,19 +1,18 @@
 use std::process::Command;
 use anyhow::{bail, Result};
+use crate::Pipe;
 
-pub fn create(
-    pipe_type:&str,
-    sink_name:&str, source_name:&str
-) -> Result<()>
+pub fn create(pipe: Pipe)
+-> Result<Pipe>
 {
-    if !sink_name.replace("_", "").chars().all(|c| c.is_alphanumeric())
-    || !source_name.replace("_", "").chars().all(|c| c.is_alphanumeric()){
+    if !pipe.sink.replace("_", "").chars().all(|c| c.is_alphanumeric())
+    || !pipe.source.replace("_", "").chars().all(|c| c.is_alphanumeric()){
         bail!("Inputs can have only alphanumeric chars or underline!")
     }
 
-    match get_id(sink_name, source_name) {
+    match get_id(pipe.clone()) {
         Ok(_) => {
-            bail!("Source or speaker already exists!")
+            bail!("Sink or source already exists!")
         },
         Err(_) => ()
     }
@@ -36,43 +35,42 @@ pub fn create(
         Ok(())
     }
 
-    match pipe_type.to_uppercase().as_str() {
+    match pipe.channel.to_uppercase().as_str() {
         "MONO"|"1.0" => {
-            load_module("mono", sink_name, source_name)?;
+            load_module("mono", &pipe.sink, &pipe.source)?;
             Command::new("pw-link").args([
-                &format!("{sink_name}:monitor_0"),
-                &format!("{source_name}:input_0")
+                &format!("{}:monitor_0", pipe.sink),
+                &format!("{}:input_0", pipe.source)
             ]).output()?;
         },
         "STEREO"|"2.0" => {
-            load_module("front-left,front-right", sink_name, source_name)?;
+            load_module("front-left,front-right", &pipe.sink, &pipe.source)?;
             for a in ["FL", "FR"] {
                 Command::new("pw-link").args([
-                    &format!("{sink_name}:monitor_{a}"),
-                    &format!("{source_name}:input_{a}")
+                    &format!("{}:monitor_{a}", pipe.sink),
+                    &format!("{}:input_{a}", pipe.source)
                 ]).output()?;
             }
         },
         _ => bail!("No such a type. Avaliable: 'MONO', 'STEREO'")
     }
 
-    Ok(())
+    Ok(pipe)
 }
 
-pub fn remove(
-    sink_name:&str, source_name:&str
-) -> Result<()>
+pub fn remove(pipe: Pipe)
+-> Result<()>
 {
 
-    let ids = match get_id(sink_name, source_name) {
+    let ids = match get_id(pipe.clone()) {
         Ok(o) => o,
         Err(e) => bail!(e)
     };
 
     Command::new("pw-link").args([
         "-d",
-        sink_name,
-        source_name
+        &pipe.sink,
+        &pipe.source
     ]).output()?;
 
     for id in [ids.0, ids.1] {
@@ -85,9 +83,8 @@ pub fn remove(
     Ok(())
 }
 
-pub fn get_id(
-    sink_name:&str, source_name:&str
-) -> Result<(String, String)>
+pub fn get_id(pipe: Pipe)
+-> Result<(String, String)>
 {
     let obj_lists = Command::new("pactl").args([
         "list", "modules", "short"
@@ -99,10 +96,10 @@ pub fn get_id(
         let tabs = line.split('\t').collect::<Vec<&str>>();
 
         if tabs.contains(&"module-null-sink") {
-            if line.contains(&format!("sink_name={sink_name} ")) {
+            if line.contains(&format!("sink_name={} ", pipe.sink)) {
                 output.0 = tabs[0].to_string()
             }
-            if line.contains(&format!("sink_name={source_name} ")) {
+            if line.contains(&format!("sink_name={} ", pipe.source)) {
                 output.1 = tabs[0].to_string()
             }
 

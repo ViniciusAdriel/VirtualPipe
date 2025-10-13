@@ -2,20 +2,31 @@
 **A GUI utility to create and manage virtual audio cables in PipeWire.**  
   
 > [!IMPORTANT]
-> Requires **pw-link** and **pactl** that can be provided by:  
->    
-> **Debian/Ubuntu:**
+> **PIPEWIRE ONLY**  
+> Requires **`pw-link`** and **`pactl`**.  
+> You can check if they are installed with:
 > ```bash
-> sudo apt install pipewire pipewire-pulse pulseaudio-utils
->  ```
-> **Fedora:**
-> ```bash
-> sudo dnf install pipewire pipewire-pulseaudio  
+> which pw-link
+> which pactl
 > ```
-> **Arch:**
+> If no path is returned, install them with the following packages:  
+>  
+> **Debian/Ubuntu**
 > ```bash
-> sudo pacman -S pipewire pipewire-pulse
+> apt install pulseaudio-utils # provides pactl
+> apt install pipewire         # provides pw-link
 > ```
+> **Fedora**
+> ```bash
+> dnf install pulseaudio-utils # provides pactl
+> dnf install pipewire-utils   # provides pw-link
+> ```
+> **Arch**
+> ```bash
+> dnf install libpulse # provides pactl
+> dnf install pipewire # provides pw-link
+> ```
+> I haven't tested in other distros :p
 
   
 ## What it does

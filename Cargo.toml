@@ -5,5 +5,5 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.100"
-slint  = { version = "1.13.1", features = ["serde"] }
+slint  = { version = "1.13.1", default-features = false, features = ["serde", "backend-winit", "renderer-skia", "compat-1-2"] }
 serde = "1.0.228"

@@ -2,6 +2,7 @@ use std::rc::Rc;
 use anyhow::bail;
 use slint::{Model, VecModel};
 
+
 mod pipe;
 
 slint::slint!{

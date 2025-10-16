@@ -33,47 +33,48 @@ export component PipeEdit inherits Rectangle {
             Rectangle {}
         }
 
-        Rectangle {}
-
-        VerticalBox {
-            padding: 25px;
-
-            Text { text: "Virtual Speaker"; }
-            vs:= LineEdit {
-                text: pipe.sink;
-                changed text => {
-                    self.text = fix_text(self.text);
-                    new_pipe.sink = self.text;
-                }
-            }
-            
-            Text { text: "Virtual Microphone"; }
-            vm:= LineEdit {
-                text: pipe.source;
-                changed text => {
-                    self.text = fix_text(self.text);
-                    new_pipe.source = self.text;
-                }
-            }
-
-            Text { text: "Channel"; }
-            HorizontalLayout {
-                cc:= ComboBox {
-                    width: self.min-width;
-                    model: [
-                        "Mono",
-                        "Stereo"
-                    ];
-                    current-value: pipe.channel;
-                    changed current-value => {
-                        new_pipe.channel = self.current-value;
+        ScrollView {
+            mouse-drag-pan-enabled: true;
+            VerticalBox {
+                padding: 25px;
+    
+                Text { text: "Virtual Speaker"; }
+                vs:= LineEdit {
+                    text: pipe.sink;
+                    changed text => {
+                        self.text = fix_text(self.text);
+                        new_pipe.sink = self.text;
                     }
                 }
+                
+                Text { text: "Virtual Microphone"; }
+                vm:= LineEdit {
+                    text: pipe.source;
+                    changed text => {
+                        self.text = fix_text(self.text);
+                        new_pipe.source = self.text;
+                    }
+                }
+    
+                Text { text: "Channel"; }
+                HorizontalLayout {
+                    cc:= ComboBox {
+                        width: self.min-width;
+                        model: [
+                            "Mono",
+                            "Stereo"
+                        ];
+                        current-value: pipe.channel;
+                        changed current-value => {
+                            new_pipe.channel = self.current-value;
+                        }
+                    }
+                    Rectangle {}
+                }
+                
                 Rectangle {}
             }
         }
-
-        Rectangle {}
 
         HorizontalBox {
 

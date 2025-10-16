@@ -1,4 +1,5 @@
-import { AboutSlint, VerticalBox, Palette, HorizontalBox, Button, CheckBox, ScrollView, LineEdit } from "std-widgets.slint";
+import { Palette } from "std-widgets.slint";
+
 import { Pipe } from "../structs.slint";
 import { PipeList } from "pipe_list.slint";
 import { PipeEdit } from "pipe_edit.slint";
@@ -6,7 +7,7 @@ import { PipeEdit } from "pipe_edit.slint";
 export component MainWindow inherits Window
 {
     title: "VirtualPipe";
-    min-height: 200px;
+    min-height: 250px;
     min-width: 300px;
 
     in-out property <int> page;
@@ -33,7 +34,10 @@ export component MainWindow inherits Window
                  easing: ease-out-elastic;
             }
             Text {
+                width: root.width;
+            
                 text: status;
+                wrap: word-wrap;
 
                 vertical-alignment: center;
                 horizontal-alignment: center;
@@ -76,6 +80,5 @@ export component MainWindow inherits Window
                 fix_text(x)
             }
         }   
-    }
-    
+    }  
 }

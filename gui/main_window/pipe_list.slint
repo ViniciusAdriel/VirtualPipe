@@ -9,7 +9,8 @@ export component PipeList inherits Rectangle {
 
     // Pipe list //
     VerticalLayout {
-        Flickable {
+        ScrollView {
+        mouse-drag-pan-enabled: true;
             VerticalBox {
                 for pipe in pipes: TouchArea {
                     HorizontalBox {   

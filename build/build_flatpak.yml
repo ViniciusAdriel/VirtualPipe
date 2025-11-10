@@ -1,0 +1,47 @@
+id: net.viniadrii.virtualpipe
+
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+
+sdk: org.freedesktop.Sdk
+
+command: virtualpipe
+modules:
+  - name: virtualpipe
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 virtualpipe /app/bin/virtualpipe
+    sources:
+      - type: file
+        path: ../target/release/virtualpipe
+
+  - name: desktop
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 entry.desktop /app/share/applications/net.viniadrii.virtualpipe.desktop
+    sources:
+      - type: file
+        path: ./entry.desktop
+  
+  - name: icon
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 256x256.png /app/share/icons/hicolor/256x256/apps/net.viniadrii.virtualpipe.png
+    sources:
+      - type: file
+        path: ./icons/256x256.png
+
+  - name: metadata
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 metainfo.xml /app/share/metainfo/net.viniadrii.virtualpipe.metainfo.xml
+    sources:
+      - type: file
+        path: ./metainfo.xml
+
+finish-args:
+  - --socket=wayland
+  - --device=dri
+
+  - --filesystem=xdg-run/pipewire-0:ro
+  - --socket=pulseaudio

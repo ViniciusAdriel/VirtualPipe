@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=VirtualPipe
+Comment=Create linked virtual audio devices
+Type=Application
+Exec=virtualpipe
+Icon=net.viniadrii.virtualpipe
+Categories=AudioVideo;Utility;

@@ -1,5 +1,5 @@
 /target
 *.lock
 dev.*
-/build/.*
+/assets/.*
 /dist/*

@@ -5,7 +5,7 @@ cd "$(cd "$(dirname "$0")" && pwd)"
 # build
 cargo build --release
 
-cd build
+cd assets
 rm -rf ./dist/*
 
 # Move binary

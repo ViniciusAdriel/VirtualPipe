@@ -1,7 +1,7 @@
-use std::rc::Rc;
+use std::{path::PathBuf, process::exit, rc::Rc};
 use anyhow::bail;
 use slint::{Model, VecModel};
-
+use std::env;
 
 mod pipe;
 
@@ -9,12 +9,35 @@ slint::slint!{
     export { MainWindow } from "gui/main_window/main.slint";
 }
 
+
+
 fn main()
 -> anyhow::Result<()>
 {
+    // Paths
+
+    let data_path = dirs::data_dir()
+        .unwrap()
+        .join("virtualpipe");
+    
+    let conf_path = dirs::config_dir()
+        .unwrap()
+        .join("virtualpipe");
+    
+    // Window
+
     let mw = MainWindow::new()?;
 
-    let pipes = Rc::new(VecModel::from(vec![]));
+    let pipes = match std::fs::read_to_string(&data_path.join("pipes.json")) {
+        Ok(c) => {
+            serde_json::from_str::<Vec<Pipe>>(&c).unwrap()
+        }
+        Err(_) => {
+            vec![]
+        }
+    };
+
+    let pipes = Rc::new(VecModel::from(pipes));
     mw.set_pipes(pipes.clone().into());
 
     // Pipe related callbacks
@@ -38,6 +61,7 @@ fn main()
     mw.on_create({
         let pipes = pipes.clone();
         let mw = mw.as_weak();
+        let data_path = data_path.clone();
 
         move |mut pipe, idx|
         {
@@ -59,6 +83,8 @@ fn main()
                             "Pipe created: '{} → {}' ({})",
                             pipe.sink, pipe.source, pipe.channel
                         ).into());
+
+                        let _ = update_pipelist(pipes.clone(), data_path.clone());
 
                         return "".into();
                     }
@@ -94,6 +120,8 @@ fn main()
         let pipes = pipes.clone();
         let mw = mw.as_weak();
 
+        let data_path = data_path.clone();
+
         move |pipe|
         {
             let mw = mw.upgrade().unwrap();
@@ -114,6 +142,9 @@ fn main()
                         "Pipe removed: '{} → {}' ({})",
                         pipe.sink, pipe.source, pipe.channel
                     ).into());
+
+                    let _ = update_pipelist(pipes.clone(), data_path.clone());
+
                     return "".into();
                 },
                 Err(e) => {
@@ -162,6 +193,7 @@ fn main()
                 new_pipe.sink, new_pipe.source, new_pipe.channel
             ).into());
             mw.set_page(0);
+
             "".into()
         }
     });
@@ -199,6 +231,65 @@ fn main()
         text.into()
     });
 
+    // Config
+
+    let config = match std::fs::read_to_string(&conf_path.join("config.json")) {
+        Ok(c) => {
+            serde_json::from_str::<Config>(&c).unwrap()
+        }
+        Err(_) => {
+            mw.get_config()
+        }
+    };
+
+    // CLI (temp)
+
+    let mut tasks = vec![];
+
+    for i in env::args().skip(1) {
+        match i.as_str() {
+            "--justrestore" => tasks.push(0),
+            _ => {
+                eprintln!("Invalid argument '{i}'.");
+                exit(1);
+            }
+        }
+    }
+
+    for i in tasks {
+        match i {
+            0 => {
+                let _ = pipe::restore(
+                    pipes.clone(),
+                    true
+                ).unwrap();
+                let _ = update_pipelist(pipes.clone(), data_path.clone());
+                exit(0)
+            }
+            _ => eprintln!("Skill Issue")
+        }
+    }
+
+    // Config: Restore When Open
+
+    mw.set_config(config.clone());
+    let _ = update_config(config, conf_path);
+
+    let mut missing_idxs = pipe::restore(
+        pipes.clone(),
+        mw.get_config().restore_when_open
+    ).unwrap();
+
+    missing_idxs.reverse();
+    
+    for i in missing_idxs {
+        pipes.remove(i as usize);
+    };
+
+    let _ = update_pipelist(pipes, data_path);
+
+    // Show gui
+
     mw.run()?;
 
     Ok(())
@@ -215,4 +306,32 @@ fn get_pipe_index(pipes: Rc<VecModel<Pipe>>, pipe: Pipe)
     }
 
     bail!("Pipe not listed.")
+}
+
+
+
+fn update_pipelist(pipelist: Rc<VecModel<Pipe>>, path: PathBuf)
+-> anyhow::Result<()>{
+
+    std::fs::create_dir_all(&path)?;
+
+    let json = serde_json::to_string_pretty(
+        &pipelist.iter().collect::<Vec<_>>()
+    )?;
+
+    std::fs::write(path.join("pipes.json"), json)?;
+
+    Ok(())
+}
+
+fn update_config(config: Config, path: PathBuf) 
+-> anyhow::Result<()>{
+
+    std::fs::create_dir_all(&path)?;
+
+    let json = serde_json::to_string_pretty(&config)?;
+
+    std::fs::write(path.join("config.json"), json)?;
+
+    Ok(())
 }

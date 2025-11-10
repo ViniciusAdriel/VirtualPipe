@@ -1,5 +1,6 @@
-use std::process::Command;
+use std::{process::Command, rc::Rc};
 use anyhow::{bail, Result};
+use slint::{VecModel, Model};
 use crate::Pipe;
 
 pub fn create(pipe: Pipe)
@@ -111,4 +112,27 @@ pub fn get_id(pipe: Pipe)
     }
 
     bail!("Pipe not found.")
+}
+
+pub fn restore(pipelist: Rc<VecModel<Pipe>>, restore: bool)
+-> Result<Vec<i32>> {
+
+    let mut missing_pipes_idx = vec![];
+    let mut idx = 0;
+
+    for pipe in pipelist.iter(){
+        match get_id(pipe.clone()) {
+            Ok(_) => (),
+            Err(_) => {
+                if restore {
+                    let _ = create(pipe);
+                } else {
+                    missing_pipes_idx.push(idx);
+                }
+            }
+        }
+        idx += 1;
+    };
+
+    Ok(missing_pipes_idx)
 }

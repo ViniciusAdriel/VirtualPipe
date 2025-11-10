@@ -1,0 +1,8 @@
+* unmess my code
+   * could not write pipes.json
+   * could not create/found data dir.
+   * error handling
+   * separate functions into files
+* config page
+* virtualpipe.service, executes `virtualpipe --justrestore` in startup
+    * enable/disable 

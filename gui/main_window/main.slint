@@ -1,6 +1,6 @@
 import { Palette } from "std-widgets.slint";
 
-import { Pipe } from "../structs.slint";
+import { Pipe, Config } from "../structs.slint";
 import { PipeList } from "pipe_list.slint";
 import { PipeEdit } from "pipe_edit.slint";
 
@@ -9,6 +9,8 @@ export component MainWindow inherits Window
     title: "VirtualPipe";
     min-height: 250px;
     min-width: 300px;
+
+    icon: @image-url("../../build/icons/256x256.png");
 
     in-out property <int> page;
 
@@ -24,6 +26,9 @@ export component MainWindow inherits Window
     callback set_status(string);
     callback fix_text(string) -> string;
 
+    in-out property <Config> config: {
+        restore_when_open: true,
+    };
 
     VerticalLayout {
         Rectangle {

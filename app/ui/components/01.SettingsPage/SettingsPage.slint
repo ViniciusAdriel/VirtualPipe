@@ -1,0 +1,10 @@
+import { AboutSlint, VerticalBox } from "std-widgets.slint";
+
+export component SettingsPage inherits VerticalBox
+{
+    callback set_page(int);
+
+    AboutSlint {
+        preferred-height: 150px;
+    }
+}

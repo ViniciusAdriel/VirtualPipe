@@ -1,5 +1,4 @@
-/target
+build/cache/
+dist/
+target/
 *.lock
-dev.*
-/assets/.*
-/dist/*

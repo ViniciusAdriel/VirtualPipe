@@ -1,0 +1,151 @@
+import { AboutSlint, VerticalBox, Palette, CheckBox, Button, HorizontalBox, LineEdit, ComboBox } from "std-widgets.slint";
+import { Pipe } from "../../../structs.slint";
+
+export component Card inherits Rectangle
+{
+    in-out property <Pipe> pipe;
+    in-out property <Pipe> edited_pipe: pipe;
+    callback update_pipe(Pipe);
+    callback remove_pipe(int);
+    callback enable_pipe(bool);
+
+    property <bool> delete_dialog;
+    
+    height: self.min-height;
+    background: Palette.control-background;
+
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: Palette.border;
+
+    clip: true;
+
+    HorizontalBox {
+        VerticalBox {
+            padding: 0;
+
+            // Pipe Settings
+            HorizontalBox {
+                padding: 0;
+
+                CheckBox {
+                    checked: pipe.enabled;
+                    changed checked => {
+                        enable_pipe(self.checked)
+                    }
+                }
+
+                sink:= LineEdit {
+                    text: pipe.sink;
+                    changed text => {
+                        edited_pipe.sink = self.text;
+                    }
+                }
+                Text {
+                    text: "→";
+                    font-weight: 800;
+                    vertical-alignment: center;
+                }
+                source:= LineEdit {
+                    text: pipe.source;
+                    changed text => {
+                        edited_pipe.source = self.text;
+                    }
+                }
+
+                ch:= ComboBox {
+                    width: self.min-width - 50px;
+                    model: ["Mono", "Stereo", "Surround"];
+                    current-index: pipe.channel;
+                    changed current-index => {
+                        edited_pipe.channel = self.current-index;
+                    }
+                }
+            }
+
+            // Pipe Tasks
+            HorizontalBox {
+                padding: 0;
+
+                if pipe == edited_pipe: TouchArea {
+                    Text {
+                        text: "♻️ Remove";
+                        color: parent.has-hover? #912: Palette.foreground;
+                    }
+                    clicked => {
+                        delete_dialog = true;
+                    }
+                }
+
+                if pipe != edited_pipe: Text {
+                    text: "Nothing will change until you hit \"Apply\".";
+                    opacity: 0.25;
+                }
+
+                Rectangle {}
+
+                                if pipe != edited_pipe: TouchArea {
+                    Text {
+                        text: "❌ Cancel";
+                        color: parent.has-hover? Palette.accent-background: Palette.foreground;
+                    }
+                    clicked => {
+                        edited_pipe = pipe;
+
+                        sink.text = pipe.sink;
+                        source.text = pipe.source;
+                        ch.current-index = pipe.channel;
+                    }
+                }
+
+                if pipe != edited_pipe: TouchArea {
+                    Text {
+                        text: "✔️ Apply";
+                        font-weight: 800;
+                        color: parent.has-hover? Palette.accent-background: Palette.foreground;
+                    }
+                    clicked => {
+                        pipe = edited_pipe;
+                        update_pipe(pipe);
+                    }
+                }
+            }
+        }
+    }
+
+    if delete_dialog: TouchArea{
+        Rectangle {
+            background: Palette.background.with-alpha(0.75);
+
+            VerticalLayout {
+                Rectangle {}
+                HorizontalBox {
+                    Rectangle {}
+                    
+                    Rectangle {
+                        background: Palette.background;
+                        border-radius: 4px;
+                        Button {
+                            text: "Cancel";
+                            clicked => {
+                                delete_dialog = false;
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        background: #912;
+                        border-radius: 4px;
+                        Button {
+                            text: "Remove";
+                            clicked => {
+                                remove_pipe(pipe.id)
+                            }
+                        }
+                    }
+                }
+                Rectangle {}
+            }
+        }
+    }
+}

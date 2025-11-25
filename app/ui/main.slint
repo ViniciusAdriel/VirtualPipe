@@ -1,0 +1,43 @@
+import { AboutSlint, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+import { MainPage }     from "components/00.MainPage/MainPage.slint";
+import { SettingsPage } from "components/01.SettingsPage/SettingsPage.slint";
+
+import { Pipe } from "structs.slint";
+
+
+export component MainWindow inherits Window
+{
+    // Window Properties //
+    title: "VirtualPipe";
+    min-width  : 600px;
+    min-height : 300px;
+
+    // Core properties //
+    in-out property <[Pipe]> pipelist: [{channel:1},{channel:0},{channel:2},{channel:1},];
+
+    // Callbacks //
+
+    // PAGES //
+    in-out property <int> page: 0;
+
+    // Pipe List Page
+    if page == 0: MainPage {
+        set_page(x) => {page = x}
+        pipelist <=> pipelist;
+    }
+
+    // Settings Page
+    if page == 1: SettingsPage {
+        set_page(x) => {page = x}
+    }
+
+    // uncomment vizualize pipelist
+    /* 
+    HorizontalBox {
+        for i in pipelist: Text {
+            text: (i.enabled? "enabled":"disabled") + i.channel;
+        }
+    }
+    */
+}

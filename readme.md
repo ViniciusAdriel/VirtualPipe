@@ -42,8 +42,3 @@ For apps without built-in noise suppression, you can feed the processed audio th
 Your virtual speaker will appear among your speakers or headphones.  
 Your virtual microphone will appear among your microphones.  
 * To make changes, click on the pipe in the list to edit its name or channel type.  
-
-
-
-> [!WARNING]
-> Virtual devices are temporary and will be removed after reboot.

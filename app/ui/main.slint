@@ -13,23 +13,42 @@ export component MainWindow inherits Window
     min-width  : 600px;
     min-height : 300px;
 
-    // Core properties //
+    // Properties //
     in-out property <[Pipe]> pipelist: [{channel:1},{channel:0},{channel:2},{channel:1},];
 
     // Callbacks //
+    callback create_pipe();
+    callback update_pipe(Pipe);
+    callback enable_pipe(bool, int);
+    callback remove_pipe(int);
 
     // PAGES //
     in-out property <int> page: 0;
 
     // Pipe List Page
     if page == 0: MainPage {
-        set_page(x) => {page = x}
         pipelist <=> pipelist;
+
+        set_page(p) => {page = p}
+        // pipe related
+        create_pipe => {
+            create_pipe()
+        }
+        remove_pipe(pipe_idx) => {
+            remove_pipe(pipe_idx)
+        }
+
+        update_pipe(new_pipe) => {
+            update_pipe(new_pipe)
+        }
+        enable_pipe(enable, pipe_idx) => {
+            enable_pipe(enable, pipe-idx)
+        }
     }
 
     // Settings Page
     if page == 1: SettingsPage {
-        set_page(x) => {page = x}
+        set_page(p) => {page = p}
     }
 
     // uncomment vizualize pipelist

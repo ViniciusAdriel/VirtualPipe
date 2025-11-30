@@ -6,10 +6,13 @@ import { Pipe } from "../../structs.slint";
 export component MainPage inherits VerticalLayout
 {
     callback set_page(int);
-    callback create_new_pipe();
 
     in-out property <[Pipe]> pipelist;
+    callback create_pipe();
     callback remove_pipe(int);
+
+    callback update_pipe(Pipe);
+    callback enable_pipe(bool, int);
 
     ScrollView {
         VerticalBox {
@@ -19,12 +22,14 @@ export component MainPage inherits VerticalLayout
                 pipe: pipe;
                 update_pipe(new_pipe) => {
                     pipe = new_pipe;
+                    update_pipe(new_pipe);
                 }
-                enable_pipe(bool) => {
-                    pipe.enabled = bool
+                enable_pipe(enable, idx) => {
+                    pipe.enabled = enable;
+                    enable_pipe(enable, idx);
                 }
-                remove_pipe(pipe_id) => {
-                    remove_pipe(pipe_id)
+                remove_pipe(pipe_idx) => {
+                    remove_pipe(pipe_idx)
                 }
             }
         }
@@ -55,7 +60,7 @@ export component MainPage inherits VerticalLayout
         Button {
             text: "Create new pipe";
             clicked => {
-                create_new_pipe()
+                create_pipe()
             }
         }
     }

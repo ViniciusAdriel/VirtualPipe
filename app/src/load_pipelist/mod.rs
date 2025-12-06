@@ -30,7 +30,6 @@ pub fn from_file(file_path: PathBuf)
         }
     };
 
-    println!("{:?}", pipelist_json);
     let mut pipelist = vec![];
 
     for i in pipelist_json {
@@ -44,7 +43,7 @@ pub fn from_file(file_path: PathBuf)
             None => continue,
         };
 
-        let enabled = utils::get_bool_or(&i, "idx", true);        
+        let enabled = utils::get_bool_or(&i, "enabled", true);        
 
         let idx = utils::get_i32(&i, "idx")
             .unwrap_or_else(||{
@@ -55,7 +54,7 @@ pub fn from_file(file_path: PathBuf)
                 candidate
             });
 
-        let channel = utils::get_i32(&i, "idx")
+        let channel = utils::get_i32(&i, "channel")
             .unwrap_or(1);
         
         pipelist.push(Pipe { channel, enabled, idx, sink, source });

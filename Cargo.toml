@@ -11,3 +11,5 @@ path = "app/src/main.rs"
 anyhow = "*"
 slint  = { version = "1.14.1", default-features = false, features = ["serde", "backend-winit", "renderer-skia", "compat-1-2"] }
 serde = "*"
+serde_json = "*"
+dirs = "*"

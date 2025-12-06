@@ -1,19 +1,34 @@
-// Imports
+use std::rc::Rc;
+use slint::{Model, VecModel};
+mod load_pipelist;
 
-// Slint Imports - Importing UI
 slint::slint!(
     export { MainWindow } from "app/ui/main.slint";
     // Go to path above to see more about UI.
 );
 
+
+
 fn main() -> anyhow::Result<()>
 {
     // Main Window //
 
-    // Creates Main Window from slint imports.
     let main_window = MainWindow::new()?;
 
+    // load pipelist
+    let data_path = dirs::data_dir()
+        .unwrap()
+        .join("virtualpipe");
+
+    let pipelist = load_pipelist::from_file(
+        data_path.join("pipelist.json")
+    );
+
+    let pipelist = Rc::new(VecModel::from(pipelist));
+    main_window.set_pipelist(pipelist.clone().into());
+
     // pipe related callbacks
+
     main_window.on_create_pipe({
         ||{
             // Create pipe
@@ -23,9 +38,17 @@ fn main() -> anyhow::Result<()>
         }
     });
     main_window.on_remove_pipe({
-        |pipe_idx|{
+        let pipelist = pipelist.clone();
+        move |pipe_idx|{
+            let pipelist = pipelist.clone();
             // Remove pipe
-
+            for i in 0..pipelist.row_count() {
+                if let Some(pipe) = pipelist.row_data(i){
+                    if pipe.idx == pipe_idx {
+                        pipelist.remove(i);
+                    }
+                }
+            }
             // Deregister the pipe.
             println!("Pipe Removed");
         }
@@ -49,7 +72,6 @@ fn main() -> anyhow::Result<()>
             // See in /app/ui/00.MainPage/components/Card.slint
             // In the 'Pipe Tasks' section.
             println!("Pipe Enabled");
-            println!("Pipe Disabled");
         }
     });
     

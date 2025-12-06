@@ -7,9 +7,28 @@ edition = "2024"
 name = "virtualpipe"
 path = "app/src/main.rs"
 
+[profile.release]
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+panic = "abort"
+
+
+
 [dependencies]
-anyhow = "*"
-slint  = { version = "1.14.1", default-features = false, features = ["serde", "backend-winit", "renderer-skia", "compat-1-2"] }
-serde = "*"
-serde_json = "*"
-dirs = "*"
+anyhow     = "1.0"
+serde      = "1.0"
+serde_json = "1.0"
+dirs       = "6.0"
+clap       = "4.5"
+
+[dependencies.slint]
+version = "1.14"
+default-features = false
+features = [
+    "serde",
+    "backend-winit",
+    "renderer-skia",
+    "compat-1-2",
+]

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg1" width="256" height="256" version="1.1" viewBox="0 0 67.733 67.733" xmlns="http://www.w3.org/2000/svg">
+ <g id="layer1" stroke-width="1.4999">
+  <rect id="rect1-3" x="2.1165" y="3.483" width="63.5" height="63.5" ry="9.5643" fill="#6f2a2a" stroke="#6f2a2a"/>
+  <rect id="rect1" x="2.1166" y=".74996" width="63.5" height="63.5" ry="9.5643" fill="#813131" stroke="#a63f3f"/>
+ </g>
+ <g id="layer2-9" transform="matrix(1.2308 0 0 1.2308 23.502 31.566)">
+  <ellipse id="path1-3" cx="26.119" cy="13.483" rx="4.7603" ry="10" fill="#755757"/>
+  <path id="path4" transform="translate(1.1814e-6)" d="m26.119 3.483v20l-16.896-0.64373v-18.713z" fill="#755757"/>
+  <ellipse id="path1-1-0" cx="9.2233" cy="13.483" rx="4.2501" ry="8.9282" fill="#674c4c" stroke="#584141" stroke-width=".85606"/>
+  <g id="layer4" transform="matrix(.73155 0 0 .73155 -15.552 -20.649)" fill="none" stroke="#584141" stroke-linecap="round" stroke-width="1.3229">
+   <path id="path157" d="m40.598 55.191c1.3475-3.1503 1.4396-6.6564 1.2161-10.009"/>
+   <path id="path158" d="m43.217 55.565c0.69523-1.603 1.0378-3.41 0.93544-5.0514"/>
+   <path id="path159" d="m44.246 48.175c0.15157-1.3108 0.12868-2.1156-0.09354-3.1805"/>
+   <path id="path163" d="m59.591 56.047c1.5566-3.7023 2.0026-7.466 1.5154-10.488"/>
+  </g>
+ </g>
+ <path id="path2" d="m33.867 46.656s-10.662 11.374-25.213 4.4779c-6.9696-3.3031-6.9741-15.12-1.8011-18.634 15.199-10.324 31.992 6.5794 45.328 4.884 10.75-1.3667 18.869-14.701 7.9108-24.15-7.1684-6.1806-26.65 2.9859-26.65 2.9859" fill="none" stroke="#674c4c" stroke-width="1.5875"/>
+ <g id="layer2" transform="matrix(1.2067 0 0 1.2067 .33542 .8383)">
+  <ellipse id="path1" cx="26.436" cy="13.483" rx="4.4429" ry="9.3332" fill="#755757"/>
+  <path id="path3" d="m26.436 4.1497-17.535-0.66677v20l17.535-0.66677z" fill="#745858"/>
+  <ellipse id="path1-1" cx="8.9014" cy="13.483" rx="4.5425" ry="9.5425" fill="#2c2121" stroke="#584141" stroke-width=".91496"/>
+  <g id="layer5" transform="matrix(.78893 0 0 .78893 .052992 .68652)" fill="none" stroke="#584141" stroke-linecap="round" stroke-width="1.3229">
+   <path id="path150" d="m17.992 24.408c1.5802-3.2779 1.7701-7.1379 1.3229-10.716"/>
+   <path id="path151" d="m20.77 24.937c0.95783-1.5149 1.2721-3.1909 1.4552-4.9609"/>
+   <path id="path152" d="m22.225 17.595c0.18114-1.0758-0.02145-2.1696-0.13229-3.2411"/>
+   <path id="path153" d="m35.785 24.474c1.2738-2.8023 1.6897-6.1444 1.214-9.1986"/>
+   <path id="path154" d="m34.727 18.28c0.19113-1.0033 0.22924-2.1736 0.19844-3.0668"/>
+  </g>
+ </g>
+</svg>

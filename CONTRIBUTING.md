@@ -1,17 +1,11 @@
 # Project structure
 
-The root directory of this project splits the workflow into two main parts:
+The root directory of this project splits the workflow into three main parts:
 
 - **build/** — scripts and files used to build the application for release  
   - The build process generates the final distributable files inside **dist/**.
+- **assets/** — images, media, and other resources used by the code or in the build process.
 - **app/** — the actual application  
-
----
-
-## About the **build/** directory
-
-`build.sh` is the script used to build the project for all supported distributions.  
-This directory also contains manifest files for packaging formats such as Flatpak, AppImage, RPM, MSI, and others.
 
 ---
 
@@ -19,7 +13,6 @@ This directory also contains manifest files for packaging formats such as Flatpa
 
 This directory is organized into:
 
-- **assets/** — images, media, and other resources used by the code  
 - **lang/** — language packs  
 - **src/** — application logic  
 - **structs/** — shared structs used by the code or the UI  

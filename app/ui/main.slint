@@ -16,13 +16,14 @@ export component MainWindow inherits Window
     // Properties //
     in-out property <[Pipe]> pipelist: [{channel:1},{channel:0},{channel:2},{channel:1},];
 
-    // Pipe related callbacks //
+    // Callbacks //
+    // Pipe
     callback create_pipe();
     callback update_pipe(Pipe);
     callback enable_pipe(bool, int);
     callback remove_pipe(int);
 
-    // Callbacks //
+    // Save/load state
     callback update_pipelist_file();
 
     // PAGES //
@@ -53,13 +54,4 @@ export component MainWindow inherits Window
     if page == 1: SettingsPage {
         set_page(p) => {page = p}
     }
-
-    // uncomment vizualize pipelist
-    /* 
-    HorizontalBox {
-        for i in pipelist: Text {
-            text: (i.enabled? "enabled":"disabled") + i.channel;
-        }
-    }
-    */
 }

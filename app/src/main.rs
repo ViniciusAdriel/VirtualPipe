@@ -2,6 +2,7 @@ use std::rc::Rc;
 use slint::{Model, VecModel};
 mod load_pipelist;
 mod save_pipelist;
+use clap::{Arg, ArgAction, Command};
 
 slint::slint!(
     export { MainWindow } from "app/ui/main.slint";
@@ -12,6 +13,15 @@ slint::slint!(
 
 fn main() -> anyhow::Result<()>
 {
+    let matches = Command::new("myapp")
+        .arg(
+            Arg::new("restore-only")
+                .long("restore-only").short('r')
+                .help("Restore pipes and exit")
+                .action(ArgAction::SetTrue),
+        )
+        .get_matches();
+
     // Main Window //
     let main_window = MainWindow::new()?;
 
@@ -69,7 +79,10 @@ fn main() -> anyhow::Result<()>
             // Update pipe
             
             main_window.invoke_update_pipelist_file();
-            println!("Pipe Updated");
+            println!(
+                "Pipe {} Updated",
+                new_pipe.idx
+            );
         }
     });
 
@@ -89,12 +102,22 @@ fn main() -> anyhow::Result<()>
         }
     });
 
-    // Callbacks
+    // Save/load state related callbacks
     main_window.on_update_pipelist_file({
         let pipelist = pipelist.clone();
 
         move || {
             let pipelist = pipelist.clone();
+
+            // Order pipelist by pipe idx
+            let mut v: Vec<Pipe> = pipelist.iter().collect();
+            v.sort_by_key(|p| p.idx);
+
+            for (i, p) in v.iter_mut().enumerate() {
+                p.idx = (i + 1) as i32;
+            }
+
+            pipelist.set_vec(v);
 
             // Register changes in pipelist file
             match save_pipelist::update_file(pipelist_path.clone(), pipelist) {
@@ -105,9 +128,15 @@ fn main() -> anyhow::Result<()>
             };
         }
     });
+
+    main_window.invoke_update_pipelist_file();
+
+    // Restore pipes from pipelist //
     
-    // Main loop
-    main_window.run()?;
+    // launches GUI //
+    if !matches.get_flag("restore-only") {
+        main_window.run()?;
+    }
 
     Ok(())
 }

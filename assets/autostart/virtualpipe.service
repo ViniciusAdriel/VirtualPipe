@@ -1,0 +1,11 @@
+[Unit]
+Description=VirtualPipe auto restore
+After=pipewire.service pipewire-pulse.service wireplumber.service
+Wants=pipewire.service
+
+[Service]
+Type=oneshot
+ExecStart=flatpak run net.viniadrii.VirtualPipe --restore-only
+
+[Install]
+WantedBy=default.target

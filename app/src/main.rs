@@ -13,6 +13,7 @@ slint::slint!(
 
 fn main() -> anyhow::Result<()>
 {
+    // CLI Flags //
     let matches = Command::new("myapp")
         .arg(
             Arg::new("restore-only")
@@ -21,6 +22,8 @@ fn main() -> anyhow::Result<()>
                 .action(ArgAction::SetTrue),
         )
         .get_matches();
+    
+    
 
     // Main Window //
     let main_window = MainWindow::new()?;
@@ -39,12 +42,52 @@ fn main() -> anyhow::Result<()>
 
     // pipe related callbacks
     main_window.on_create_pipe({
+        let pipelist = pipelist.clone();
         let main_window = main_window.as_weak();
 
         move ||{
+            let pipelist = pipelist.clone();
             let main_window = main_window.upgrade().unwrap();
-            // Create pipe
-            
+
+            // Define default pipe's name //
+            let sink_name;
+            let source_name;
+
+            let mut suffix = 1;
+
+            loop {
+                let sink_name_candidate   = format!("VirtualSpeaker{suffix}");
+                let source_name_candidate = format!("VirtualMicrophone{suffix}");
+
+                if !(0..pipelist.row_count())
+                    .filter_map(|i| pipelist.row_data(i))
+                    .any(|pipe| pipe.sink == sink_name_candidate)
+                || !(0..pipelist.row_count())
+                    .filter_map(|i| pipelist.row_data(i))
+                    .any(|pipe| pipe.source == source_name_candidate)
+                {
+                    sink_name   = sink_name_candidate;
+                    source_name = source_name_candidate;
+                    break;
+                } else {
+                    suffix += 1;
+                    continue;
+                }
+            }
+
+            // Create pipe //
+
+            // Register pipe //
+            pipelist.push(
+                Pipe {
+                    channel: 1,
+                    enabled: true,
+                    idx: -1,
+                    sink: sink_name.into(),
+                    source: source_name.into()
+                }
+            );
+
             main_window.invoke_update_pipelist_file();
             println!("Pipe Created");
         }
@@ -68,6 +111,10 @@ fn main() -> anyhow::Result<()>
             }
 
             main_window.invoke_update_pipelist_file();
+            println!(
+                "Pipe {} Removed",
+                pipe_idx
+            );
         }
     });
 
@@ -102,7 +149,9 @@ fn main() -> anyhow::Result<()>
         }
     });
 
-    // Save/load state related callbacks
+    
+
+    // Restore pipes from pipelist //
     main_window.on_update_pipelist_file({
         let pipelist = pipelist.clone();
 
@@ -130,8 +179,6 @@ fn main() -> anyhow::Result<()>
     });
 
     main_window.invoke_update_pipelist_file();
-
-    // Restore pipes from pipelist //
     
     // launches GUI //
     if !matches.get_flag("restore-only") {

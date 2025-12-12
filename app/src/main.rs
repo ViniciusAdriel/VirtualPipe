@@ -2,7 +2,8 @@ use std::rc::Rc;
 use slint::{Model, VecModel};
 mod load_pipelist;
 mod save_pipelist;
-use clap::{Arg, ArgAction, Command};
+mod pipelist_utils;
+mod cli;
 
 slint::slint!(
     export { MainWindow } from "app/ui/main.slint";
@@ -13,30 +14,19 @@ slint::slint!(
 
 fn main() -> anyhow::Result<()>
 {
-    // CLI Flags //
-    let matches = Command::new("myapp")
-        .arg(
-            Arg::new("restore-only")
-                .long("restore-only").short('r')
-                .help("Restore pipes and exit")
-                .action(ArgAction::SetTrue),
-        )
-        .get_matches();
-    
-    
-
-    // Main Window //
-    let main_window = MainWindow::new()?;
-
-    // load pipelist
     let data_path = dirs::data_dir()
         .unwrap()
         .join("virtualpipe");
-    
     let pipelist_path = data_path.join("pipelist.json");
-
+    let args = cli::parse();
+    
+    // load pipelist
     let pipelist = load_pipelist::from_file(pipelist_path.clone());
+    
+    // Main Window //
+    let main_window = MainWindow::new()?;
 
+    // Give pipelist to slint
     let pipelist = Rc::new(VecModel::from(pipelist));
     main_window.set_pipelist(pipelist.clone().into());
 
@@ -50,30 +40,12 @@ fn main() -> anyhow::Result<()>
             let main_window = main_window.upgrade().unwrap();
 
             // Define default pipe's name //
-            let sink_name;
-            let source_name;
-
-            let mut suffix = 1;
-
-            loop {
-                let sink_name_candidate   = format!("VirtualSpeaker{suffix}");
-                let source_name_candidate = format!("VirtualMicrophone{suffix}");
-
-                if !(0..pipelist.row_count())
-                    .filter_map(|i| pipelist.row_data(i))
-                    .any(|pipe| pipe.sink == sink_name_candidate)
-                || !(0..pipelist.row_count())
-                    .filter_map(|i| pipelist.row_data(i))
-                    .any(|pipe| pipe.source == source_name_candidate)
-                {
-                    sink_name   = sink_name_candidate;
-                    source_name = source_name_candidate;
-                    break;
-                } else {
-                    suffix += 1;
-                    continue;
-                }
-            }
+            let (sink_name, source_name) =
+                pipelist_utils::create_pipe::get_default_pipe_name(
+                    &pipelist,
+                    "VirtualSpeaker",
+                    "VirtualMicrophone"
+                );
 
             // Create pipe //
 
@@ -181,7 +153,7 @@ fn main() -> anyhow::Result<()>
     main_window.invoke_update_pipelist_file();
     
     // launches GUI //
-    if !matches.get_flag("restore-only") {
+    if !args.restore_only {
         main_window.run()?;
     }
 

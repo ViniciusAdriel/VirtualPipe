@@ -1,7 +1,7 @@
 use std::{fs::{File, create_dir_all, read_to_string}, path::PathBuf, vec};
 use serde_json::Value;
 use crate::Pipe;
-mod utils;
+mod get;
 
 
 
@@ -33,19 +33,19 @@ pub fn from_file(file_path: PathBuf)
     let mut pipelist = vec![];
 
     for i in pipelist_json {
-        let sink = match utils::get_string(&i, "sink") {
+        let sink = match get::string(&i, "sink") {
             Some(s) => s,
             None => continue,
         };
 
-        let source = match utils::get_string(&i, "source") {
+        let source = match get::string(&i, "source") {
             Some(s) => s,
             None => continue,
         };
 
-        let enabled = utils::get_bool_or(&i, "enabled", true);        
+        let enabled = get::bool_or(&i, "enabled", true);        
 
-        let idx = utils::get_i32(&i, "idx")
+        let idx = get::i32(&i, "idx")
             .unwrap_or_else(||{
                 let mut candidate = 0;
                 while pipelist.iter().any(|p: &Pipe|p.idx == candidate) {
@@ -54,7 +54,7 @@ pub fn from_file(file_path: PathBuf)
                 candidate
             });
 
-        let channel = utils::get_i32(&i, "channel")
+        let channel = get::i32(&i, "channel")
             .unwrap_or(1);
         
         pipelist.push(Pipe { channel, enabled, idx, sink, source });

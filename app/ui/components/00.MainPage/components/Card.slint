@@ -5,9 +5,9 @@ export component Card inherits Rectangle
 {
     in-out property <Pipe> pipe;
     in-out property <Pipe> edited_pipe: pipe;
-    callback enable_pipe(bool, int);
-    callback update_pipe(Pipe);
-    callback remove_pipe(int);
+    callback enable_pipe(bool, Pipe);
+    callback update_pipe(Pipe, Pipe);
+    callback remove_pipe(Pipe);
 
     property <bool> delete_dialog;
     
@@ -31,7 +31,7 @@ export component Card inherits Rectangle
                 CheckBox {
                     checked: pipe.enabled;
                     changed checked => {
-                        enable_pipe(self.checked, pipe.idx)
+                        enable_pipe(self.checked, pipe)
                     }
                 }
 
@@ -118,8 +118,8 @@ export component Card inherits Rectangle
                         color: parent.has-hover? Palette.accent-background: Palette.foreground;
                     }
                     clicked => {
+                        update_pipe(pipe, edited_pipe);
                         pipe = edited_pipe;
-                        update_pipe(pipe);
                     }
                 }
             }
@@ -155,7 +155,7 @@ export component Card inherits Rectangle
                         Button {
                             text: "Remove";
                             clicked => {
-                                remove_pipe(pipe.idx)
+                                remove_pipe(pipe)
                             }
                         }
                     }

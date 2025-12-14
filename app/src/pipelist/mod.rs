@@ -2,14 +2,12 @@ use std::rc::Rc;
 use slint::{VecModel, Model};
 use crate::Pipe;
 
-pub fn get_default_pipe_name(
+pub fn get_suffix(
     pipelist: &Rc<VecModel<Pipe>>,
     default_sink_name: &str,
     default_source_name: &str
-)-> (String, String) {
-    let sink_name;
-    let source_name;
-
+)-> i32
+{
     let mut suffix = 1;
 
     loop {
@@ -23,14 +21,10 @@ pub fn get_default_pipe_name(
             .filter_map(|i| pipelist.row_data(i))
             .any(|pipe| pipe.source == source_name_candidate)
         {
-            sink_name   = sink_name_candidate;
-            source_name = source_name_candidate;
-            break;
+            return suffix;
         } else {
             suffix += 1;
             continue;
         }
     }
-
-    (sink_name, source_name)
 }

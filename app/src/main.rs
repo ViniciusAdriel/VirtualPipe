@@ -2,8 +2,9 @@ use std::rc::Rc;
 use slint::{Model, VecModel};
 mod load_pipelist;
 mod save_pipelist;
-mod pipelist_utils;
+mod pipelist;
 mod cli;
+mod pipe;
 
 slint::slint!(
     export { MainWindow } from "app/ui/main.slint";
@@ -40,28 +41,45 @@ fn main() -> anyhow::Result<()>
             let main_window = main_window.upgrade().unwrap();
 
             // Define default pipe's name //
-            let (sink_name, source_name) =
-                pipelist_utils::create_pipe::get_default_pipe_name(
+            let (default_sink_name, default_source_name) = (
+                "VirtualSpeaker",
+                "VirtualMicrophone"
+            );
+             
+            let suffix =
+                pipelist::get_suffix(
                     &pipelist,
-                    "VirtualSpeaker",
-                    "VirtualMicrophone"
+                    default_sink_name,
+                    default_source_name
                 );
-
-            // Create pipe //
-
-            // Register pipe //
-            pipelist.push(
-                Pipe {
-                    channel: 1,
-                    enabled: true,
-                    idx: -1,
-                    sink: sink_name.into(),
-                    source: source_name.into()
-                }
+            
+            let (sink_name, source_name) = (
+                format!("{}{}", default_sink_name, suffix),
+                format!("{}{}", default_source_name, suffix)
             );
 
-            main_window.invoke_update_pipelist_file();
-            println!("Pipe Created");
+            // Create pipe //
+            let pipe = Pipe {
+                channel: 1,
+                enabled: true,
+                idx: -1,
+                sink: sink_name.into(),
+                source: source_name.into()
+            };
+            
+            match pipe::create_new_pipe(&pipe) {
+                Ok(_) => {
+                    pipelist.push(
+                        pipe
+                    );
+
+                    main_window.invoke_update_pipelist_file();
+                    println!("Pipe Created");
+                }
+                Err(e) => {
+                    println!("Failed to create pipe: {}", e);
+                }
+            }
         }
     });
 
@@ -69,55 +87,97 @@ fn main() -> anyhow::Result<()>
         let pipelist = pipelist.clone();
         let main_window = main_window.as_weak();
 
-        move |pipe_idx|{
+        move |pipe|{
             let pipelist = pipelist.clone();
             let main_window = main_window.upgrade().unwrap();
-
-            // Remove pipe from pipelist
-            for i in 0..pipelist.row_count() {
-                if let Some(pipe) = pipelist.row_data(i){
-                    if pipe.idx == pipe_idx {
-                        pipelist.remove(i);
+            
+            // Remove pipe
+            if pipe.enabled {
+                match pipe::remove_pipe(&pipe) {
+                    Ok(_) => {
+                        pipelist.remove((pipe.idx - 1) as usize);
+                        
+                        main_window.invoke_update_pipelist_file();
+                    }
+                    Err(e) => {
+                        println!("Failed to remove pipe: {}", e);
                     }
                 }
+            } else {
+                pipelist.remove((pipe.idx - 1) as usize);
             }
-
-            main_window.invoke_update_pipelist_file();
-            println!(
-                "Pipe {} Removed",
-                pipe_idx
-            );
+            
+            println!("Pipe {} Removed", pipe.idx);
         }
     });
 
     main_window.on_update_pipe({
         let main_window = main_window.as_weak();
 
-        move |new_pipe|{
+        move |old_pipe, new_pipe|{
             let main_window = main_window.upgrade().unwrap();
-            // Update pipe
-            
+
+            // Remove old pipe
+            let removed = if old_pipe.enabled {
+                match pipe::remove_pipe(&old_pipe) {
+                    Ok(_) => true,
+                    Err(e) => {
+                        println!("Failed to update pipe: {}", e);
+                        false
+                    }
+                }
+            } else {
+                true
+            };
+
+            // create new pipe
+            if removed {
+                match pipe::create_new_pipe(&new_pipe) {
+                    Ok(_) => {
+                        println!("Pipe updated");
+                    }
+                    Err(e) => {
+                        println!("Failed to update pipe: {}", e);
+                    }
+                }
+            }
+
             main_window.invoke_update_pipelist_file();
-            println!(
-                "Pipe {} Updated",
-                new_pipe.idx
-            );
+            println!("Pipe {} Updated", old_pipe.idx);
         }
     });
 
     main_window.on_enable_pipe({
         let main_window = main_window.as_weak();
 
-        move |enable, pipe_idx|{
+        move |enable, pipe|{
             let main_window = main_window.upgrade().unwrap();
+
             // Enable/Disable pipe
+            if enable {
+                let mut pipe = pipe;
+                pipe.enabled = true;
+
+                match pipe::create_new_pipe(&pipe) {
+                    Ok(_) => {
+                        println!("Pipe enabled.");
+                    }
+                    Err(e) => {
+                        println!("Failed to enable pipe: {}", e);
+                    }
+                }
+            } else {
+                match pipe::remove_pipe(&pipe) {
+                    Ok(_) => {
+                        println!("Pipe {} disabled", pipe.idx);
+                    }
+                    Err(e) => {
+                        println!("Failed to disable pipe: {}", e);
+                    }
+                }
+            }
 
             main_window.invoke_update_pipelist_file();
-            println!(
-                "Pipe {} {}",
-                pipe_idx,
-                if enable {"Enabled"} else {"Disabled"}
-            );
         }
     });
 

@@ -9,10 +9,10 @@ export component MainPage inherits VerticalLayout
 
     in-out property <[Pipe]> pipelist;
     callback create_pipe();
-    callback remove_pipe(int);
+    callback remove_pipe(Pipe);
 
-    callback update_pipe(Pipe);
-    callback enable_pipe(bool, int);
+    callback update_pipe(Pipe, Pipe);
+    callback enable_pipe(bool, Pipe);
 
     ScrollView {
         VerticalBox {
@@ -20,16 +20,16 @@ export component MainPage inherits VerticalLayout
             spacing: 10px;
             for pipe in pipelist: Card {
                 pipe: pipe;
-                update_pipe(new_pipe) => {
+                update_pipe(old_pipe, new_pipe) => {
                     pipe = new_pipe;
-                    update_pipe(new_pipe);
+                    update_pipe(old_pipe, new_pipe);
                 }
-                enable_pipe(enable, idx) => {
+                enable_pipe(enable, p) => {
                     pipe.enabled = enable;
-                    enable_pipe(enable, idx);
+                    enable_pipe(enable, p);
                 }
-                remove_pipe(pipe_idx) => {
-                    remove_pipe(pipe_idx)
+                remove_pipe(pipe) => {
+                    remove_pipe(pipe)
                 }
             }
         }

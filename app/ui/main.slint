@@ -19,9 +19,9 @@ export component MainWindow inherits Window
     // Callbacks //
     // Pipe
     callback create_pipe();
-    callback update_pipe(Pipe);
-    callback enable_pipe(bool, int);
-    callback remove_pipe(int);
+    callback update_pipe(Pipe, Pipe);
+    callback enable_pipe(bool, Pipe);
+    callback remove_pipe(Pipe);
 
     // Save/load state
     callback update_pipelist_file();
@@ -38,15 +38,15 @@ export component MainWindow inherits Window
         create_pipe => {
             create_pipe()
         }
-        remove_pipe(pipe_idx) => {
-            remove_pipe(pipe_idx)
+        remove_pipe(pipe) => {
+            remove_pipe(pipe)
         }
 
-        update_pipe(new_pipe) => {
-            update_pipe(new_pipe)
+        update_pipe(old_pipe, new_pipe) => {
+            update_pipe(old_pipe, new_pipe)
         }
-        enable_pipe(enable, pipe_idx) => {
-            enable_pipe(enable, pipe-idx)
+        enable_pipe(enable, pipe) => {
+            enable_pipe(enable, pipe)
         }
     }
 

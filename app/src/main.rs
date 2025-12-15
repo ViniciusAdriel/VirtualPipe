@@ -113,37 +113,40 @@ fn main() -> anyhow::Result<()>
 
     main_window.on_update_pipe({
         let main_window = main_window.as_weak();
+        let pipelist = pipelist.clone();
 
         move |old_pipe, new_pipe|{
             let main_window = main_window.upgrade().unwrap();
+            let pipelist = pipelist.clone();
+            pipelist.remove((old_pipe.idx - 1) as usize);
 
             // Remove old pipe
-            let removed = if old_pipe.enabled {
-                match pipe::remove_pipe(&old_pipe) {
-                    Ok(_) => true,
-                    Err(e) => {
-                        println!("Failed to update pipe: {}", e);
-                        false
-                    }
-                }
-            } else {
-                true
-            };
+            let mut old_pipe_deleted = false;
 
-            // create new pipe
-            if removed {
-                match pipe::create_new_pipe(&new_pipe) {
-                    Ok(_) => {
-                        println!("Pipe updated");
-                    }
-                    Err(e) => {
-                        println!("Failed to update pipe: {}", e);
-                    }
+            match pipe::remove_pipe(&old_pipe) {
+                Ok(_) => old_pipe_deleted = true,
+                Err(e) => {
+                    pipelist.insert((old_pipe.idx - 1) as usize, old_pipe.clone());
+                    eprintln!("Failed updating pipe (Deleting old pipe): {}", e)
                 }
             }
 
+            // create new pipe
+            if old_pipe_deleted {
+                match pipe::create_new_pipe(&new_pipe) {
+                    Ok(_) => {
+                        pipelist.insert((old_pipe.idx - 1) as usize, new_pipe.clone());
+                        println!("Pipe {} Updated", old_pipe.idx);
+                    },
+                    Err(e) => {
+                        pipelist.insert((old_pipe.idx - 1) as usize, old_pipe.clone());
+                        let _ = pipe::create_new_pipe(&old_pipe);
+                        eprintln!("Failed updating pipe (Creating new pipe): {}", e)
+                    }
+                }
+            }
+            
             main_window.invoke_update_pipelist_file();
-            println!("Pipe {} Updated", old_pipe.idx);
         }
     });
 

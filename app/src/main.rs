@@ -15,22 +15,26 @@ slint::slint!(
 
 fn main() -> anyhow::Result<()>
 {
+    let args = cli::parse();
+
     let data_path = dirs::data_dir()
         .unwrap()
         .join("virtualpipe");
-    let pipelist_path = data_path.join("pipelist.json");
-    let args = cli::parse();
+        
+    let cnfg_path = dirs::config_dir()
+        .unwrap()
+        .join("virtualpipe")
+        .join("config.json");
     
-    // load pipelist
-    let pipelist = load_pipelist::from_file(pipelist_path.clone());
+    let pipelist = load_pipelist::from_file(data_path.join("pipelist.json"));
     
     // Main Window //
     let main_window = MainWindow::new()?;
 
-    // Give pipelist to slint
     let pipelist = Rc::new(VecModel::from(pipelist));
     main_window.set_pipelist(pipelist.clone().into());
 
+    
     // pipe related callbacks
     main_window.on_create_pipe({
         let pipelist = pipelist.clone();
@@ -118,35 +122,51 @@ fn main() -> anyhow::Result<()>
         move |old_pipe, new_pipe|{
             let main_window = main_window.upgrade().unwrap();
             let pipelist = pipelist.clone();
-            pipelist.remove((old_pipe.idx - 1) as usize);
 
             // Remove old pipe
-            let mut old_pipe_deleted = false;
+            pipelist.remove((old_pipe.idx - 1) as usize);
 
             match pipe::remove_pipe(&old_pipe) {
-                Ok(_) => old_pipe_deleted = true,
+                Ok(_) => (),
                 Err(e) => {
-                    pipelist.insert((old_pipe.idx - 1) as usize, old_pipe.clone());
-                    eprintln!("Failed updating pipe (Deleting old pipe): {}", e)
+                    pipelist.insert(
+                        (old_pipe.idx - 1) as usize,
+                        old_pipe.clone()
+                    );
+                    eprintln!("Failed updating pipe (Deleting old pipe): {}", e);
+                    return;
                 }
             }
 
             // create new pipe
-            if old_pipe_deleted {
-                match pipe::create_new_pipe(&new_pipe) {
-                    Ok(_) => {
-                        pipelist.insert((old_pipe.idx - 1) as usize, new_pipe.clone());
-                        println!("Pipe {} Updated", old_pipe.idx);
-                    },
-                    Err(e) => {
-                        pipelist.insert((old_pipe.idx - 1) as usize, old_pipe.clone());
-                        let _ = pipe::create_new_pipe(&old_pipe);
-                        eprintln!("Failed updating pipe (Creating new pipe): {}", e)
-                    }
+            match pipe::create_new_pipe(&new_pipe) {
+                Ok(_) => {
+                    pipelist.insert(
+                        (old_pipe.idx - 1) as usize,
+                        new_pipe.clone()
+                    );
+
+                    println!("Pipe {} Updated", old_pipe.idx);
+                    main_window.invoke_update_pipelist_file();
+                },
+                Err(e) => {
+                    eprintln!("Failed updating pipe (Creating new pipe): {}", e);
+
+                    // If fails, restores old pipe
+                    match pipe::create_new_pipe(&old_pipe) {
+                        Ok(_) => {
+                            pipelist.insert(
+                                (old_pipe.idx - 1) as usize,
+                                old_pipe.clone()
+                            );
+                        }
+                        Err(e) => {
+                            eprintln!("Failed restoring pipe: {}", e);
+                            main_window.invoke_update_pipelist_file();
+                        }
+                    };
                 }
             }
-            
-            main_window.invoke_update_pipelist_file();
         }
     });
 
@@ -183,10 +203,8 @@ fn main() -> anyhow::Result<()>
             main_window.invoke_update_pipelist_file();
         }
     });
-
     
-
-    // Restore pipes from pipelist //
+    // Restore pipes from pipelist
     main_window.on_update_pipelist_file({
         let pipelist = pipelist.clone();
 
@@ -204,7 +222,7 @@ fn main() -> anyhow::Result<()>
             pipelist.set_vec(v);
 
             // Register changes in pipelist file
-            match save_pipelist::update_file(pipelist_path.clone(), pipelist) {
+            match save_pipelist::update_file(data_path.join("pipelist.json"), pipelist) {
                 Err(e) => {
                     eprintln!("Error saving pipelist state: {}", e)
                 },
@@ -215,7 +233,7 @@ fn main() -> anyhow::Result<()>
 
     main_window.invoke_update_pipelist_file();
     
-    // launches GUI //
+    // launches GUI
     if !args.restore_only {
         main_window.run()?;
     }

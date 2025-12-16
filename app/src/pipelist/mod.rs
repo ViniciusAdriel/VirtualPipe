@@ -8,11 +8,17 @@ pub fn get_suffix(
     default_source_name: &str
 )-> i32
 {
-    let mut suffix = 1;
+    let mut suffix = 0;
 
     loop {
-        let sink_name_candidate   = format!("{default_sink_name}{suffix}");
-        let source_name_candidate = format!("{default_source_name}{suffix}");
+        let s = suffix.to_string();
+
+        let sink_name_candidate   = format!(
+            "{default_sink_name}{}", if suffix == 0 {""} else {&s}
+        );
+        let source_name_candidate = format!(
+            "{default_source_name}{}", if suffix == 0 {""} else {&s}
+        );
 
         if !(0..pipelist.row_count())
             .filter_map(|i| pipelist.row_data(i))

@@ -24,9 +24,28 @@ fn main() -> anyhow::Result<()>
     let cnfg_path = dirs::config_dir()
         .unwrap()
         .join("virtualpipe")
-        .join("config.json");
+        .join("settings.json");
     
     let pipelist = load_pipelist::from_file(data_path.join("pipelist.json"));
+
+    // Restore pipes
+    for pipe in &pipelist {
+        if pipe.enabled {
+            match pipe::get_id(pipe) {
+                Ok(_) => (),
+                Err(_) => {
+                    match pipe::create_new_pipe(pipe) {
+                        Ok(_) => (),
+                        Err(_) => ()
+                    }
+                }
+            };
+        }
+    }
+
+    if args.restore_only {
+        return Ok(());
+    }
     
     // Main Window //
     let main_window = MainWindow::new()?;
@@ -50,16 +69,17 @@ fn main() -> anyhow::Result<()>
                 "VirtualMicrophone"
             );
              
-            let suffix =
+            let mut suffix =
                 pipelist::get_suffix(
                     &pipelist,
                     default_sink_name,
                     default_source_name
                 );
+            let s = suffix.to_string();
             
             let (sink_name, source_name) = (
-                format!("{}{}", default_sink_name, suffix),
-                format!("{}{}", default_source_name, suffix)
+                format!("{}{}", default_sink_name, if suffix == 0 {""} else {&s}),
+                format!("{}{}", default_source_name, if suffix == 0 {""} else {&s})
             );
 
             // Create pipe //
@@ -73,9 +93,7 @@ fn main() -> anyhow::Result<()>
             
             match pipe::create_new_pipe(&pipe) {
                 Ok(_) => {
-                    pipelist.push(
-                        pipe
-                    );
+                    pipelist.insert(0, pipe);
 
                     main_window.invoke_update_pipelist_file();
                     println!("Pipe Created");
@@ -99,7 +117,7 @@ fn main() -> anyhow::Result<()>
             if pipe.enabled {
                 match pipe::remove_pipe(&pipe) {
                     Ok(_) => {
-                        pipelist.remove((pipe.idx - 1) as usize);
+                        pipelist.remove(pipe.idx as usize);
                         
                         main_window.invoke_update_pipelist_file();
                     }
@@ -108,9 +126,10 @@ fn main() -> anyhow::Result<()>
                     }
                 }
             } else {
-                pipelist.remove((pipe.idx - 1) as usize);
+                pipelist.remove(pipe.idx as usize);
             }
             
+            main_window.invoke_update_pipelist_file();
             println!("Pipe {} Removed", pipe.idx);
         }
     });
@@ -124,13 +143,11 @@ fn main() -> anyhow::Result<()>
             let pipelist = pipelist.clone();
 
             // Remove old pipe
-            pipelist.remove((old_pipe.idx - 1) as usize);
-
             match pipe::remove_pipe(&old_pipe) {
                 Ok(_) => (),
                 Err(e) => {
-                    pipelist.insert(
-                        (old_pipe.idx - 1) as usize,
+                    pipelist.set_row_data(
+                        old_pipe.idx as usize,
                         old_pipe.clone()
                     );
                     eprintln!("Failed updating pipe (Deleting old pipe): {}", e);
@@ -141,8 +158,8 @@ fn main() -> anyhow::Result<()>
             // create new pipe
             match pipe::create_new_pipe(&new_pipe) {
                 Ok(_) => {
-                    pipelist.insert(
-                        (old_pipe.idx - 1) as usize,
+                    pipelist.set_row_data(
+                        old_pipe.idx as usize,
                         new_pipe.clone()
                     );
 
@@ -155,8 +172,8 @@ fn main() -> anyhow::Result<()>
                     // If fails, restores old pipe
                     match pipe::create_new_pipe(&old_pipe) {
                         Ok(_) => {
-                            pipelist.insert(
-                                (old_pipe.idx - 1) as usize,
+                            pipelist.set_row_data(
+                                old_pipe.idx as usize,
                                 old_pipe.clone()
                             );
                         }
@@ -211,32 +228,24 @@ fn main() -> anyhow::Result<()>
         move || {
             let pipelist = pipelist.clone();
 
-            // Order pipelist by pipe idx
-            let mut v: Vec<Pipe> = pipelist.iter().collect();
-            v.sort_by_key(|p| p.idx);
-
-            for (i, p) in v.iter_mut().enumerate() {
-                p.idx = (i + 1) as i32;
+            // Sync pipe idx with model order
+            for (i, mut p) in pipelist.iter().enumerate() {
+                p.idx = i as i32;
+                pipelist.set_row_data(i, p);
             }
-
-            pipelist.set_vec(v);
-
+            
             // Register changes in pipelist file
-            match save_pipelist::update_file(data_path.join("pipelist.json"), pipelist) {
-                Err(e) => {
-                    eprintln!("Error saving pipelist state: {}", e)
-                },
-                Ok(_) => ()
-            };
+            save_pipelist::update_file(data_path.join("pipelist.json"), pipelist)
+                .unwrap_or_else(|e| {
+                    eprintln!("Error saving pipelist state: {}", e);
+                });
         }
     });
 
     main_window.invoke_update_pipelist_file();
     
     // launches GUI
-    if !args.restore_only {
-        main_window.run()?;
-    }
+    main_window.run()?;
 
     Ok(())
 }

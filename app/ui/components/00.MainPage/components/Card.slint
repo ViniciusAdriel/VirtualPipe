@@ -31,12 +31,14 @@ export component Card inherits Rectangle
                 CheckBox {
                     checked: pipe.enabled;
                     changed checked => {
-                        enable_pipe(self.checked, pipe)
+                        enable_pipe(self.checked, pipe);
+                        edited_pipe.enabled = self.checked;
                     }
                 }
 
                 sink:= LineEdit {
                     text: pipe.sink;
+                    enabled: edited_pipe.enabled;
                     changed text => {
                         edited_pipe.sink = self.text;
                     }
@@ -48,6 +50,7 @@ export component Card inherits Rectangle
                 }
                 source:= LineEdit {
                     text: pipe.source;
+                    enabled: edited_pipe.enabled;
                     changed text => {
                         edited_pipe.source = self.text;
                     }
@@ -56,6 +59,7 @@ export component Card inherits Rectangle
                 ch:= ComboBox {
                     width: 120px;
                     model: ["Mono", "Stereo", "Surround"];
+                    enabled: edited_pipe.enabled;
                     current-index: pipe.channel;
                     changed current-index => {
                         edited_pipe.channel = self.current-index;
@@ -119,6 +123,11 @@ export component Card inherits Rectangle
                     }
                     clicked => {
                         update_pipe(pipe, edited_pipe);
+                        edited_pipe = pipe;
+
+                        sink.text = pipe.sink;
+                        source.text = pipe.source;
+                        ch.current-index = pipe.channel;
                     }
                 }
             }

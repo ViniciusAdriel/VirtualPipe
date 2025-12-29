@@ -1,6 +1,9 @@
 use std::rc::Rc;
-use slint::{Model, VecModel};
+use slint::{
+    Model, VecModel
+};
 mod load_pipelist;
+mod settings;
 mod save_pipelist;
 mod pipelist;
 mod cli;
@@ -23,10 +26,10 @@ fn main() -> anyhow::Result<()>
         
     let cnfg_path = dirs::config_dir()
         .unwrap()
-        .join("virtualpipe")
-        .join("settings.json");
+        .join("virtualpipe");
     
     let pipelist = load_pipelist::from_file(data_path.join("pipelist.json"));
+    let settings = settings::load::from_file(cnfg_path.join("settings.json"));
 
     // Restore pipes
     for pipe in &pipelist {
@@ -34,7 +37,8 @@ fn main() -> anyhow::Result<()>
             match pipe::get_id(pipe) {
                 Ok(_) => (),
                 Err(_) => {
-                    match pipe::create_new_pipe(pipe) {
+                    // If fails to get id, so the pipe exists.
+                    match pipe::new(pipe) {
                         Ok(_) => (),
                         Err(_) => ()
                     }
@@ -49,6 +53,8 @@ fn main() -> anyhow::Result<()>
     
     // Main Window //
     let main_window = MainWindow::new()?;
+
+    main_window.set_settings(settings.clone());
 
     let pipelist = Rc::new(VecModel::from(pipelist));
     main_window.set_pipelist(pipelist.clone().into());
@@ -69,29 +75,27 @@ fn main() -> anyhow::Result<()>
                 "VirtualMicrophone"
             );
              
-            let mut suffix =
+            let suffix =
                 pipelist::get_suffix(
                     &pipelist,
                     default_sink_name,
                     default_source_name
-                );
-            let s = suffix.to_string();
+                ).to_string();
             
             let (sink_name, source_name) = (
-                format!("{}{}", default_sink_name, if suffix == 0 {""} else {&s}),
-                format!("{}{}", default_source_name, if suffix == 0 {""} else {&s})
+                format!("{}{}", default_sink_name,   if suffix == "0" {""} else {&suffix}),
+                format!("{}{}", default_source_name, if suffix == "0" {""} else {&suffix})
             );
 
             // Create pipe //
             let pipe = Pipe {
                 channel: 1,
                 enabled: true,
-                idx: -1,
                 sink: sink_name.into(),
                 source: source_name.into()
             };
             
-            match pipe::create_new_pipe(&pipe) {
+            match pipe::new(&pipe) {
                 Ok(_) => {
                     pipelist.insert(0, pipe);
 
@@ -109,15 +113,15 @@ fn main() -> anyhow::Result<()>
         let pipelist = pipelist.clone();
         let main_window = main_window.as_weak();
 
-        move |pipe|{
+        move |pipe, index|{
             let pipelist = pipelist.clone();
             let main_window = main_window.upgrade().unwrap();
             
             // Remove pipe
             if pipe.enabled {
-                match pipe::remove_pipe(&pipe) {
+                match pipe::remove(&pipe) {
                     Ok(_) => {
-                        pipelist.remove(pipe.idx as usize);
+                        pipelist.remove(index as usize);
                         
                         main_window.invoke_update_pipelist_file();
                     }
@@ -126,11 +130,11 @@ fn main() -> anyhow::Result<()>
                     }
                 }
             } else {
-                pipelist.remove(pipe.idx as usize);
+                pipelist.remove(index as usize);
             }
             
             main_window.invoke_update_pipelist_file();
-            println!("Pipe {} Removed", pipe.idx);
+            println!("Pipe {} Removed", index);
         }
     });
 
@@ -138,16 +142,16 @@ fn main() -> anyhow::Result<()>
         let main_window = main_window.as_weak();
         let pipelist = pipelist.clone();
 
-        move |old_pipe, new_pipe|{
+        move |old_pipe, new_pipe, index|{
             let main_window = main_window.upgrade().unwrap();
             let pipelist = pipelist.clone();
 
             // Remove old pipe
-            match pipe::remove_pipe(&old_pipe) {
+            match pipe::remove(&old_pipe) {
                 Ok(_) => (),
                 Err(e) => {
                     pipelist.set_row_data(
-                        old_pipe.idx as usize,
+                        index as usize,
                         old_pipe.clone()
                     );
                     eprintln!("Failed updating pipe (Deleting old pipe): {}", e);
@@ -156,24 +160,24 @@ fn main() -> anyhow::Result<()>
             }
 
             // create new pipe
-            match pipe::create_new_pipe(&new_pipe) {
+            match pipe::new(&new_pipe) {
                 Ok(_) => {
                     pipelist.set_row_data(
-                        old_pipe.idx as usize,
+                        index as usize,
                         new_pipe.clone()
                     );
 
-                    println!("Pipe {} Updated", old_pipe.idx);
+                    println!("Pipe {} Updated", index);
                     main_window.invoke_update_pipelist_file();
                 },
                 Err(e) => {
                     eprintln!("Failed updating pipe (Creating new pipe): {}", e);
 
                     // If fails, restores old pipe
-                    match pipe::create_new_pipe(&old_pipe) {
+                    match pipe::new(&old_pipe) {
                         Ok(_) => {
                             pipelist.set_row_data(
-                                old_pipe.idx as usize,
+                                index as usize,
                                 old_pipe.clone()
                             );
                         }
@@ -190,7 +194,7 @@ fn main() -> anyhow::Result<()>
     main_window.on_enable_pipe({
         let main_window = main_window.as_weak();
 
-        move |enable, pipe|{
+        move |enable, pipe, index|{
             let main_window = main_window.upgrade().unwrap();
 
             // Enable/Disable pipe
@@ -198,7 +202,7 @@ fn main() -> anyhow::Result<()>
                 let mut pipe = pipe;
                 pipe.enabled = true;
 
-                match pipe::create_new_pipe(&pipe) {
+                match pipe::new(&pipe) {
                     Ok(_) => {
                         println!("Pipe enabled.");
                     }
@@ -207,9 +211,9 @@ fn main() -> anyhow::Result<()>
                     }
                 }
             } else {
-                match pipe::remove_pipe(&pipe) {
+                match pipe::remove(&pipe) {
                     Ok(_) => {
-                        println!("Pipe {} disabled", pipe.idx);
+                        println!("Pipe {} disabled", index);
                     }
                     Err(e) => {
                         println!("Failed to disable pipe: {}", e);
@@ -221,19 +225,13 @@ fn main() -> anyhow::Result<()>
         }
     });
     
-    // Restore pipes from pipelist
+    // Restore pipes from pipelist.json
     main_window.on_update_pipelist_file({
         let pipelist = pipelist.clone();
 
         move || {
             let pipelist = pipelist.clone();
 
-            // Sync pipe idx with model order
-            for (i, mut p) in pipelist.iter().enumerate() {
-                p.idx = i as i32;
-                pipelist.set_row_data(i, p);
-            }
-            
             // Register changes in pipelist file
             save_pipelist::update_file(data_path.join("pipelist.json"), pipelist)
                 .unwrap_or_else(|e| {
@@ -243,7 +241,35 @@ fn main() -> anyhow::Result<()>
     });
 
     main_window.invoke_update_pipelist_file();
-    
+
+    // Get settings from settings.json
+    main_window.on_apply_settings({
+        move |settings| {
+            println!("Applying settings: {:?}", settings);
+
+            match settings::apply(&settings)
+            {
+                Ok(_) =>
+                {
+                    match settings::save::to_file(
+                        cnfg_path.join("settings.json"),
+                        &settings
+                    ){
+                        Ok(_) => (),
+                        Err(e) => {
+                            eprintln!("Error saving settings: {}", e)
+                        }
+                    }
+                },
+                Err(e) => {
+                    eprintln!("Error applying settings: {}", e)
+                }
+            }
+        }
+    });
+
+    main_window.invoke_apply_settings(settings);
+
     // launches GUI
     main_window.run()?;
 

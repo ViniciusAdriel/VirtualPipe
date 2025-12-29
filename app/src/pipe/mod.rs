@@ -2,8 +2,8 @@ mod create;
 mod remove;
 use std::process::Command;
 use anyhow::bail;
-pub use create::create_new_pipe;
-pub use remove::remove_pipe;
+pub use create::new;
+pub use remove::remove;
 use crate::Pipe;
 
 pub fn get_id(pipe: &Pipe)

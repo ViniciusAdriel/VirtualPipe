@@ -1,8 +1,10 @@
 import { AboutSlint, VerticalBox, Palette, CheckBox, Button, HorizontalBox, LineEdit, ComboBox } from "std-widgets.slint";
-import { Pipe } from "../../../structs.slint";
+import { Pipe, Settings } from "../../../structs.slint";
 
 export component Card inherits Rectangle
 {
+    in-out property <Settings> settings;
+
     in-out property <Pipe> pipe;
     in-out property <Pipe> edited_pipe: pipe;
     callback enable_pipe(bool, Pipe);
@@ -30,7 +32,7 @@ export component Card inherits Rectangle
 
                 CheckBox {
                     checked: pipe.enabled;
-                    changed checked => {
+                    toggled => {
                         enable_pipe(self.checked, pipe);
                         edited_pipe.enabled = self.checked;
                     }
@@ -81,7 +83,11 @@ export component Card inherits Rectangle
                     clicked => {
                         // Opens the Delete dialog.
                         // See more below in the 'Delete dialog' section of this file.
-                        delete_dialog = true;
+                        if settings.confirm-to-delete-pipe {
+                            delete_dialog = true;
+                        } else {
+                            remove_pipe(pipe)
+                        }
                     }
                 }
 

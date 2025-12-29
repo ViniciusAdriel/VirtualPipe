@@ -3,7 +3,7 @@ import { AboutSlint, VerticalBox, HorizontalBox } from "std-widgets.slint";
 import { MainPage }     from "components/00.MainPage/MainPage.slint";
 import { SettingsPage } from "components/01.SettingsPage/SettingsPage.slint";
 
-import { Pipe } from "structs.slint";
+import { Pipe, Settings } from "structs.slint";
 
 
 export component MainWindow inherits Window
@@ -14,23 +14,27 @@ export component MainWindow inherits Window
     min-height : 300px;
 
     // Properties //
+    in-out property <Settings> settings;
     in-out property <[Pipe]> pipelist;
 
     // Callbacks //
+
     // Pipe
     callback create_pipe();
-    callback update_pipe(Pipe, Pipe);
-    callback enable_pipe(bool, Pipe);
-    callback remove_pipe(Pipe);
+    callback update_pipe(Pipe, Pipe, int);
+    callback enable_pipe(bool, Pipe, int);
+    callback remove_pipe(Pipe, int);
 
     // Save/load state
     callback update_pipelist_file();
+    callback apply_settings(Settings);
 
     // PAGES //
     in-out property <int> page: 0;
 
     // Pipe List Page
     if page == 0: MainPage {
+        settings <=> settings;
         pipelist <=> pipelist;
 
         set_page(p) => {page = p}
@@ -38,20 +42,25 @@ export component MainWindow inherits Window
         create_pipe => {
             create_pipe()
         }
-        remove_pipe(pipe) => {
-            remove_pipe(pipe)
+        remove_pipe(pipe, index) => {
+            remove_pipe(pipe, index)
         }
 
-        update_pipe(old_pipe, new_pipe) => {
-            update_pipe(old_pipe, new_pipe)
+        update_pipe(old_pipe, new_pipe, index) => {
+            update_pipe(old_pipe, new_pipe, index)
         }
-        enable_pipe(enable, pipe) => {
-            enable_pipe(enable, pipe)
+        enable_pipe(enable, pipe, index) => {
+            enable_pipe(enable, pipe, index)
         }
     }
 
     // Settings Page
     if page == 1: SettingsPage {
         set_page(p) => {page = p}
+        settings <=> settings;
+
+        apply_settings(settings) => {
+            apply_settings(settings);
+        }
     }
 }

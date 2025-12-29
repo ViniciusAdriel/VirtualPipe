@@ -1,35 +1,41 @@
 import { AboutSlint, VerticalBox, Button, ScrollView, Palette, HorizontalBox } from "std-widgets.slint";
 import { Card } from "components/Card.slint";
 
-import { Pipe } from "../../structs.slint";
+import { Pipe, Settings } from "../../structs.slint";
 
 export component MainPage inherits VerticalLayout
 {
     callback set_page(int);
 
+    in-out property <Settings> settings;
     in-out property <[Pipe]> pipelist;
-    callback create_pipe();
-    callback remove_pipe(Pipe);
 
-    callback update_pipe(Pipe, Pipe);
-    callback enable_pipe(bool, Pipe);
+    callback create_pipe();
+    callback remove_pipe(Pipe, int);
+
+    callback update_pipe(Pipe, Pipe, int);
+    callback enable_pipe(bool, Pipe, int);
+
+    
 
     ScrollView {
         VerticalBox {
             padding: 20px;
             spacing: 10px;
-            for pipe in pipelist: Card {
-                pipe: pipe;
+            for i in pipelist.length: Card
+            {
+                settings <=> settings;
+                pipe: pipelist[i];
                 update_pipe(old_pipe, new_pipe) => {
-                    pipe = new_pipe;
-                    update_pipe(old_pipe, new_pipe);
+                    pipelist[i] = new_pipe;
+                    update_pipe(old_pipe, new_pipe, i);
                 }
-                enable_pipe(enable, p) => {
-                    pipe.enabled = enable;
-                    enable_pipe(enable, p);
+                enable_pipe(enable, pipe) => {
+                    pipelist[i].enabled = enable;
+                    enable_pipe(enable, pipe, i);
                 }
                 remove_pipe(pipe) => {
-                    remove_pipe(pipe)
+                    remove_pipe(pipe, i)
                 }
             }
         }
@@ -45,11 +51,6 @@ export component MainPage inherits VerticalLayout
     }
 
     HorizontalBox {
-        TouchArea {
-            Text {
-                text: "Help (F1)";
-            }
-        }
         Rectangle {}
         Button {
             text: "Settings";

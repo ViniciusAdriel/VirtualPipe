@@ -25,7 +25,7 @@ fn load_module(
     Ok(())
 }
 
-pub fn create_new_pipe(
+pub fn new(
     pipe: &Pipe
 ) -> anyhow::Result<()>
 {

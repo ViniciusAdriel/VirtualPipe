@@ -1,7 +1,7 @@
 use std::process::Command;
 use crate::{Pipe, pipe::get_id};
 
-pub fn remove_pipe(
+pub fn remove(
     pipe: &Pipe
 )-> anyhow::Result<()>
 {

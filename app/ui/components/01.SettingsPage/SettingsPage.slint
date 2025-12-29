@@ -1,10 +1,100 @@
-import { AboutSlint, VerticalBox } from "std-widgets.slint";
+import { AboutSlint, VerticalBox, Button, ScrollView, Palette, HorizontalBox, ComboBox, CheckBox, LineEdit } from "std-widgets.slint";
+import { Settings } from "../../structs.slint";
 
-export component SettingsPage inherits VerticalBox
+export component SettingsPage inherits VerticalLayout
 {
-    callback set_page(int);
+    in-out property <Settings> settings;
+    in-out property <Settings> new_settings: settings;
 
-    AboutSlint {
-        preferred-height: 150px;
+    callback set_page(int);
+    callback apply_settings(Settings);
+
+    // settings //
+    HorizontalLayout {
+        spacing: 0;
+        ScrollView {
+            VerticalBox {
+                restore-on-system-startup:= CheckBox {
+                    text: "Restore on System Startup";
+                    checked: settings.restore-on-system-startup;
+                    toggled => {
+                        new_settings.restore-on-system-startup = self.checked;
+                    }
+                }
+                confirm-to-delete-pipe:= CheckBox {
+                    text: "Confirm to Delete Pipe";
+                    checked: settings.confirm-to-delete-pipe;
+                    toggled => {
+                        new_settings.confirm-to-delete-pipe = self.checked;
+                    }
+                }
+            }
+        }
+
+        HorizontalBox {
+            padding-left: 0;
+            padding-right: 0;
+            Rectangle {
+                width: 1px;
+                background: Palette.border;
+            }
+        }
+
+        VerticalBox {
+            width: 160px;
+            spacing: 0;
+
+            Text {
+                text: "VirtualPipe 2.0.0 dev";
+            }
+            Text {
+                text: "By Vinícius Adriel";
+                opacity: 0.5;
+            }
+            
+            Rectangle {}
+
+            Image {
+                height: 60px;
+                source: @image-url("../../../../assets/MadeWithSlint.png");
+            }
+        }
+    }
+
+    // Footer //
+    HorizontalBox {
+        padding-top: 0;
+        padding-bottom: 0;
+        Rectangle {
+            height: 1px;
+            background: Palette.border;
+        }
+    }
+
+    HorizontalBox {
+        Button {
+            text: "Apply";
+            enabled: settings != new_settings;
+            clicked => {
+                settings = new_settings;
+                apply_settings(new_settings);
+            }
+        }
+        Button {
+            text: settings!= new_settings? "Undo changes" : "Go back";
+            clicked => {
+                if settings != new_settings {
+                    new_settings = settings;
+
+                    restore-on-system-startup.checked =
+                        settings.restore-on-system-startup;
+                    confirm-to-delete-pipe.checked =
+                        settings.confirm-to-delete-pipe;
+                } else {
+                    set_page(0)
+                }
+            }
+        }
+        Rectangle {}
     }
 }

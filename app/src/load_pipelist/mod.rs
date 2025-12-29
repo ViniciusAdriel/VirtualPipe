@@ -45,19 +45,10 @@ pub fn from_file(file_path: PathBuf)
 
         let enabled = get::bool_or(&i, "enabled", true);        
 
-        let idx = get::i32(&i, "idx")
-            .unwrap_or_else(||{
-                let mut candidate = 0;
-                while pipelist.iter().any(|p: &Pipe|p.idx == candidate) {
-                    candidate += 1;
-                }
-                candidate
-            });
-
         let channel = get::i32(&i, "channel")
             .unwrap_or(1);
         
-        pipelist.push(Pipe { channel, enabled, idx, sink, source });
+        pipelist.push(Pipe { channel, enabled, sink, source });
 
     }
 

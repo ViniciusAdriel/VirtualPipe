@@ -2,3 +2,4 @@ build/cache/
 dist/
 target/
 *.lock
+.repo

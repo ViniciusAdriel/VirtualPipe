@@ -26,7 +26,7 @@ pub fn from_file(file_path: PathBuf) -> Settings
         restore_on_system_startup: v
             .get("restore_on_system_startup")
             .and_then(|v| v.as_bool())
-            .unwrap_or(true),
+            .unwrap_or(false),
 
         confirm_to_delete_pipe: v
             .get("confirm_to_delete_pipe")

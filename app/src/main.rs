@@ -2,9 +2,7 @@ use std::rc::Rc;
 use slint::{
     Model, VecModel
 };
-mod load_pipelist;
 mod settings;
-mod save_pipelist;
 mod pipelist;
 mod cli;
 mod pipe;
@@ -28,13 +26,13 @@ fn main() -> anyhow::Result<()>
         .unwrap()
         .join("virtualpipe");
     
-    let pipelist = load_pipelist::from_file(data_path.join("pipelist.json"));
+    let pipelist = pipelist::load::from_file(data_path.join("pipelist.json"));
     let settings = settings::load::from_file(cnfg_path.join("settings.json"));
 
     // Restore pipes
     for pipe in &pipelist {
         if pipe.enabled {
-            match pipe::get_id(pipe) {
+            match pipe::get::id(pipe) {
                 Ok(_) => (),
                 Err(_) => {
                     // If fails to get id, so the pipe exists.
@@ -76,7 +74,7 @@ fn main() -> anyhow::Result<()>
             );
              
             let suffix =
-                pipelist::get_suffix(
+                pipe::get::suffix(
                     &pipelist,
                     default_sink_name,
                     default_source_name
@@ -233,7 +231,7 @@ fn main() -> anyhow::Result<()>
             let pipelist = pipelist.clone();
 
             // Register changes in pipelist file
-            save_pipelist::update_file(data_path.join("pipelist.json"), pipelist)
+            pipelist::save::to_file(data_path.join("pipelist.json"), pipelist)
                 .unwrap_or_else(|e| {
                     eprintln!("Error saving pipelist state: {}", e);
                 });

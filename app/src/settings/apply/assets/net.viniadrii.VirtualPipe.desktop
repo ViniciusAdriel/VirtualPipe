@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=VirtualPipe
-Exec=flatpak run --command=virtualpipe net.viniadrii.VirtualPipe --restoreonly
-Icon=net.viniadrii.VirtualPipe
-X-GNOME-Autostart-enabled=true
-Comment=Restores VirtualPipe's pipes
-NoDisplay=true

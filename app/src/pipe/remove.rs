@@ -1,11 +1,11 @@
 use std::process::Command;
-use crate::{Pipe, pipe::get_id};
+use crate::{Pipe, pipe};
 
 pub fn remove(
     pipe: &Pipe
 )-> anyhow::Result<()>
 {
-    let ids = get_id(pipe)?;
+    let ids = pipe::get::id(pipe)?;
 
     // Unlink sinks
     Command::new("pw-link").args([

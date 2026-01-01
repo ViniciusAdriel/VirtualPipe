@@ -1,0 +1,7 @@
+@rust-attr(derive(serde::Serialize, serde::Deserialize))
+export struct Pipe {
+    enabled : bool,
+    channel : int,
+    source  : string,
+    sink    : string,
+}

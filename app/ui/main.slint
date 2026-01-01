@@ -1,0 +1,95 @@
+import { AboutSlint, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+import { MainPage }     from "components/00.MainPage/MainPage.slint";
+import { SettingsPage } from "components/01.SettingsPage/SettingsPage.slint";
+import { FirstRunPage } from "components/02.FirstRunPage/FirstRunPage.slint";
+
+import { Pipe, Settings } from "structs.slint";
+
+import "../../assets/fonts/Inter.ttf";
+
+export component MainWindow inherits Window
+{
+    // Window Properties //
+    title:
+        page == 0? "VirtualPipe":
+        "VirtualPipe — " +
+        (
+            page == 2? @tr("first-run"):
+            page == 1? @tr("settings"):
+            ""
+        );
+
+    min-width  : 600px;
+    min-height : 300px;
+    //
+
+    default-font-family: "Inter";
+
+    // Properties //
+    in-out property <Settings> settings: {first_run:true};
+    in-out property <[Pipe]> pipelist;
+
+    // Callbacks //
+
+    // Pipe
+    callback create_pipe();
+    callback update_pipe(Pipe, Pipe, int);
+    callback enable_pipe(bool, Pipe, int);
+    callback remove_pipe(Pipe, int);
+
+    // Save/load state
+    callback update_pipelist_file();
+    callback apply_settings(Settings);
+
+    // PAGES //
+    in-out property <int> page: settings.first-run? 2 : 0;
+
+    // Pipe List Page
+    if page == 0: MainPage {
+        settings <=> settings;
+        pipelist <=> pipelist;
+
+        set_page(p) => {page = p}
+        // pipe related
+        create_pipe => {
+            create_pipe()
+        }
+        remove_pipe(pipe, index) => {
+            remove_pipe(pipe, index)
+        }
+
+        update_pipe(old_pipe, new_pipe, index) => {
+            update_pipe(old_pipe, new_pipe, index)
+        }
+        enable_pipe(enable, pipe, index) => {
+            enable_pipe(enable, pipe, index)
+        }
+    }
+
+    // Settings Page
+    if page == 1: SettingsPage {
+        set_page(p) => {page = p}
+        settings <=> settings;
+
+        apply_settings(settings) => {
+            apply_settings(settings);
+        }
+    }
+
+    // First Run Page
+    if page == 2: FirstRunPage {
+        set_page(p) => {
+            page = p;
+            settings.first-run = false;
+            apply_settings(settings);
+        }
+
+        restore_with_system => {
+            page = 0;
+            settings.restore-on-system-startup = true;
+            settings.first-run = false;
+            apply_settings(settings);
+        }
+    }
+}

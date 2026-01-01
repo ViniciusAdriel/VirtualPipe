@@ -1,0 +1,119 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2026-01-01 03:45+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ui/components/01.SettingsPage/SettingsPage.slint:18
+msgctxt "SettingsPage"
+msgid "restore-on-system-startup-settings-option"
+msgstr ""
+
+#: ui/components/01.SettingsPage/SettingsPage.slint:25
+msgctxt "SettingsPage"
+msgid "confirm-to-delete-pipe-settings-option"
+msgstr ""
+
+#: ui/components/01.SettingsPage/SettingsPage.slint:76
+msgctxt "SettingsPage"
+msgid "apply-btn"
+msgstr ""
+
+#: ui/components/01.SettingsPage/SettingsPage.slint:84
+msgctxt "SettingsPage"
+msgid "undo-changes-btn"
+msgstr ""
+
+#: ui/components/01.SettingsPage/SettingsPage.slint:84
+msgctxt "SettingsPage"
+msgid "go-back-btn"
+msgstr ""
+
+#: ui/components/00.MainPage/MainPage.slint:56
+msgctxt "MainPage"
+msgid "settings-btn"
+msgstr ""
+
+#: ui/components/00.MainPage/MainPage.slint:62
+msgctxt "MainPage"
+msgid "new-pipe-btn"
+msgstr ""
+
+#: ui/components/00.MainPage/components/Card.slint:80
+msgctxt "Card"
+msgid "remove-btn"
+msgstr ""
+
+#: ui/components/00.MainPage/components/Card.slint:102
+msgctxt "Card"
+msgid "nothing-changes-until-apply-msg"
+msgstr ""
+
+#: ui/components/00.MainPage/components/Card.slint:111
+msgctxt "Card"
+msgid "cancel-option"
+msgstr ""
+
+#: ui/components/00.MainPage/components/Card.slint:126
+msgctxt "Card"
+msgid "apply-option"
+msgstr ""
+
+#: ui/components/00.MainPage/components/Card.slint:159
+msgctxt "Card"
+msgid "remove-pipe-dialog-cancel-btn"
+msgstr ""
+
+#: ui/components/00.MainPage/components/Card.slint:170
+msgctxt "Card"
+msgid "remove-pipe-dialog-remove-btn"
+msgstr ""
+
+#: ui/components/02.FirstRunPage/FirstRunPage.slint:10
+msgctxt "FirstRunPage"
+msgid "pipes-doesnt-persist-msg"
+msgstr ""
+
+#: ui/components/02.FirstRunPage/FirstRunPage.slint:14
+msgctxt "FirstRunPage"
+msgid "restore-with-system-question-msg"
+msgstr ""
+
+#: ui/components/02.FirstRunPage/FirstRunPage.slint:21
+msgctxt "FirstRunPage"
+msgid "restore-with-system-decline-btn"
+msgstr ""
+
+#: ui/components/02.FirstRunPage/FirstRunPage.slint:27
+msgctxt "FirstRunPage"
+msgid "restore-with-system-confirm-btn"
+msgstr ""
+
+#: ui/components/02.FirstRunPage/FirstRunPage.slint:35
+msgctxt "FirstRunPage"
+msgid "this-can-be-changed-in-settings-msg"
+msgstr ""
+
+#: ui/components/02.FirstRunPage/FirstRunPage.slint:41
+msgctxt "FirstRunPage"
+msgid "manual-autostart-msg"
+msgstr ""
+
+#: ui/main.slint:18
+msgctxt "MainWindow"
+msgid "first-run"
+msgstr ""
+
+#: ui/main.slint:19
+msgctxt "MainWindow"
+msgid "settings"
+msgstr ""
+

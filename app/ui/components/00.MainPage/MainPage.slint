@@ -1,0 +1,69 @@
+import { AboutSlint, VerticalBox, Button, ScrollView, Palette, HorizontalBox } from "std-widgets.slint";
+import { Card } from "components/Card.slint";
+
+import { Pipe, Settings } from "../../structs.slint";
+
+export component MainPage inherits VerticalLayout
+{
+    callback set_page(int);
+
+    in-out property <Settings> settings;
+    in-out property <[Pipe]> pipelist;
+
+    callback create_pipe();
+    callback remove_pipe(Pipe, int);
+
+    callback update_pipe(Pipe, Pipe, int);
+    callback enable_pipe(bool, Pipe, int);
+
+    
+
+    ScrollView {
+        VerticalBox {
+            padding: 20px;
+            spacing: 10px;
+            for i in pipelist.length: Card
+            {
+                settings <=> settings;
+                pipe: pipelist[i];
+                update_pipe(old_pipe, new_pipe) => {
+                    pipelist[i] = new_pipe;
+                    update_pipe(old_pipe, new_pipe, i);
+                }
+                enable_pipe(enable, pipe) => {
+                    pipelist[i].enabled = enable;
+                    enable_pipe(enable, pipe, i);
+                }
+                remove_pipe(pipe) => {
+                    remove_pipe(pipe, i)
+                }
+            }
+        }
+    }
+    
+    HorizontalBox {
+        padding-top: 0;
+        padding-bottom: 0;
+        Rectangle {
+            height: 1px;
+            background: Palette.border;
+        }
+    }
+
+    HorizontalBox {
+        Rectangle {}
+        Button {
+            text: @tr("settings-btn");
+            clicked => {
+                set_page(1)
+            }
+        }
+        Button {
+            text: @tr("new-pipe-btn");
+            clicked => {
+                create_pipe()
+            }
+        }
+    }
+    
+}

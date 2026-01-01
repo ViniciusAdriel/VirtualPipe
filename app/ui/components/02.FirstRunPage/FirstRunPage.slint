@@ -1,0 +1,46 @@
+import { AboutSlint, VerticalBox, Button, ScrollView, Palette, HorizontalBox, ComboBox, CheckBox, LineEdit } from "std-widgets.slint";
+
+export component FirstRunPage inherits VerticalBox
+{
+    callback set_page(int);
+    callback restore_with_system();
+
+    Rectangle {}
+    Text {
+        text: @tr("pipes-doesnt-persist-msg");
+            horizontal-alignment: center;
+    }
+    Text {
+        text: @tr("restore-with-system-question-msg");
+        horizontal-alignment: center;
+        font-weight: 700;
+    }
+    HorizontalBox {
+        Rectangle {}
+        Button {
+            text: @tr("restore-with-system-decline-btn");
+            clicked => {
+                set_page(0);
+            }
+        }
+        Button {
+            text: @tr("restore-with-system-confirm-btn");
+            clicked => {
+                restore_with_system();
+            }
+        }
+        Rectangle {}
+    }
+    Text {
+        text: @tr("this-can-be-changed-in-settings-msg");
+        opacity: 0.5;
+        horizontal-alignment: center;
+    }
+    Rectangle {}
+    Text {
+        text: @tr("manual-autostart-msg");
+        font-size: 10px;
+        opacity: 0.5;
+        horizontal-alignment: center;
+    }
+}

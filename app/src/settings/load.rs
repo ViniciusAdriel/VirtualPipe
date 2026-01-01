@@ -23,6 +23,11 @@ pub fn from_file(file_path: PathBuf) -> Settings
         .unwrap_or_else(|_| Value::Object(Default::default()));
 
     Settings {
+        first_run: v
+            .get("first_run")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(true),
+
         restore_on_system_startup: v
             .get("restore_on_system_startup")
             .and_then(|v| v.as_bool())

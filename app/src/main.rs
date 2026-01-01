@@ -13,8 +13,8 @@ slint::slint!(
 );
 
 
-
-fn main() -> anyhow::Result<()>
+#[tokio::main]
+async fn main() -> anyhow::Result<()>
 {
     let args = cli::parse();
 
@@ -243,26 +243,24 @@ fn main() -> anyhow::Result<()>
     // Get settings from settings.json
     main_window.on_apply_settings({
         move |settings| {
-            println!("Applying settings: {:?}", settings);
+            let settings = settings.clone();
+            let cnfg_path = cnfg_path.clone();
 
-            match settings::apply(&settings)
-            {
-                Ok(_) =>
-                {
-                    match settings::save::to_file(
-                        cnfg_path.join("settings.json"),
-                        &settings
-                    ){
-                        Ok(_) => (),
-                        Err(e) => {
-                            eprintln!("Error saving settings: {}", e)
+            tokio::spawn(async move {
+                match settings::apply(&settings).await {
+                    Ok(_) => {
+                        if let Err(e) = settings::save::to_file(
+                            cnfg_path.join("settings.json"),
+                            &settings,
+                        ) {
+                            eprintln!("Error saving settings: {}", e);
                         }
                     }
-                },
-                Err(e) => {
-                    eprintln!("Error applying settings: {}", e)
+                    Err(e) => {
+                        eprintln!("Error applying settings: {}", e);
+                    }
                 }
-            }
+            });
         }
     });
 

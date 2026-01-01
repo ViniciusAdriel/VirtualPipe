@@ -5,3 +5,4 @@ Comment=Create linked virtual audio devices
 Exec=virtualpipe
 Icon=net.viniadrii.VirtualPipe
 Categories=AudioVideo;Utility;
+StartupWMClass=net.viniadrii.VirtualPipe

@@ -2,6 +2,7 @@ import { AboutSlint, VerticalBox, HorizontalBox } from "std-widgets.slint";
 
 import { MainPage }     from "components/00.MainPage/MainPage.slint";
 import { SettingsPage } from "components/01.SettingsPage/SettingsPage.slint";
+import { FirstRunPage } from "components/02.FirstRunPage/FirstRunPage.slint";
 
 import { Pipe, Settings } from "structs.slint";
 
@@ -9,14 +10,19 @@ import { Pipe, Settings } from "structs.slint";
 export component MainWindow inherits Window
 {
     // Window Properties //
-    title: "VirtualPipe";
+    title:
+        "VirtualPipe" +
+        (
+            page == 2? " — First Run":
+            page == 1? " — Settings":
+            ""
+        );
+        
     min-width  : 600px;
     min-height : 300px;
 
-    icon: @image-url("../../assets/app-icon/scalable.svg");
-
     // Properties //
-    in-out property <Settings> settings;
+    in-out property <Settings> settings: {first_run:true};
     in-out property <[Pipe]> pipelist;
 
     // Callbacks //
@@ -32,7 +38,7 @@ export component MainWindow inherits Window
     callback apply_settings(Settings);
 
     // PAGES //
-    in-out property <int> page: 0;
+    in-out property <int> page: settings.first-run? 2 : 0;
 
     // Pipe List Page
     if page == 0: MainPage {
@@ -62,6 +68,22 @@ export component MainWindow inherits Window
         settings <=> settings;
 
         apply_settings(settings) => {
+            apply_settings(settings);
+        }
+    }
+
+    // First Run Page
+    if page == 2: FirstRunPage {
+        set_page(p) => {
+            page = p;
+            settings.first-run = false;
+            apply_settings(settings);
+        }
+
+        restore_with_system => {
+            page = 0;
+            settings.restore-on-system-startup = true;
+            settings.first-run = false;
             apply_settings(settings);
         }
     }

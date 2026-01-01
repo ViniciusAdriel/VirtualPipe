@@ -16,7 +16,7 @@ pub fn to_file(
     let json = serde_json::to_string_pretty(settings)?;
 
     fs::write(&file_path, json)?;
-    println!("Settings saved in {:?}", file_path);
+    println!("Settings Updated.");
 
     Ok(())
 }

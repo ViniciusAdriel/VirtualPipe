@@ -1,6 +1,6 @@
 @rust-attr(derive(serde::Serialize, serde::Deserialize))
 export struct Settings {
-    restore_on_system_startup : bool, // Default: True
+    first_run                 : bool, // Default: True
+    restore_on_system_startup : bool, // Default: False
     confirm_to_delete_pipe    : bool, // Default: True
-    
 }

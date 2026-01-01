@@ -1,0 +1,46 @@
+import { AboutSlint, VerticalBox, Button, ScrollView, Palette, HorizontalBox, ComboBox, CheckBox, LineEdit } from "std-widgets.slint";
+
+export component FirstRunPage inherits VerticalBox
+{
+    callback set_page(int);
+    callback restore_with_system();
+
+    Rectangle {}
+    Text {
+        text: "By default, pipes do not persist after restarting the computer.";
+            horizontal-alignment: center;
+    }
+    Text {
+        text: "Would you like VirtualPipe to start with the system to restore the Pipes?";
+        horizontal-alignment: center;
+        font-weight: 700;
+    }
+    HorizontalBox {
+        Rectangle {}
+        Button {
+            text: "No";
+            clicked => {
+                set_page(0);
+            }
+        }
+        Button {
+            text: "Restore Pipes with system";
+            clicked => {
+                restore_with_system();
+            }
+        }
+        Rectangle {}
+    }
+    Text {
+        text: "This can be changed in the settings.";
+        opacity: 0.5;
+        horizontal-alignment: center;
+    }
+    Rectangle {}
+    Text {
+        text: "For OS auto-start, use the `--restore-only` flag to restore Pipes without the GUI.";
+        font-size: 10px;
+        opacity: 0.5;
+        horizontal-alignment: center;
+    }
+}

@@ -1,23 +1,21 @@
+slint::include_modules!();
+
 use i_slint_backend_winit::winit::{platform::x11::WindowAttributesExtX11, window::WindowAttributes};
 use i_slint_backend_winit::Backend;
-use std::rc::Rc;
 use slint::{
     Model, VecModel
 };
+use std::rc::Rc;
 mod settings;
 mod pipelist;
-mod cli;
 mod pipe;
-
-slint::slint!(
-    export { MainWindow } from "app/ui/main.slint";
-    // Go to path above to see more about UI.
-);
+mod cli;
 
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()>
 {
+    // Backend attributes
     let backend = Backend::builder()
         .with_window_attributes_hook(move |attrs: WindowAttributes| {
             // Fix missing icon on wayland.
@@ -31,8 +29,13 @@ async fn main() -> anyhow::Result<()>
 
     slint::platform::set_platform(Box::new(backend))?;
 
+    // Translations
+    slint::init_translations!(concat!(env!("CARGO_MANIFEST_DIR"), "/app/lang/"));
+
+    // CLI
     let args = cli::parse();
 
+    // Files
     let data_path = dirs::data_dir()
         .unwrap()
         .join("virtualpipe");

@@ -16,14 +16,18 @@ panic = "abort"
 
 
 
+[build-dependencies]
+slint-build = "1.14"
+
 [dependencies]
 anyhow     = "1.0"
 serde      = "1.0"
 serde_json = "1.0"
 dirs       = "6.0"
 ashpd      = "0.12"
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-i-slint-backend-winit = "1.14"
+tokio = { version = "1", features = ["macros"] }
+i-slint-backend-winit = "1.14.0"
+slint-build           = "1.14"
 
 [dependencies.clap]
 version = "4.5"
@@ -39,4 +43,5 @@ features = [
     "backend-winit",
     "renderer-skia",
     "compat-1-2",
+    "gettext"
 ]

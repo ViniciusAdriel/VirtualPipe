@@ -15,14 +15,14 @@ export component SettingsPage inherits VerticalLayout
         ScrollView {
             VerticalBox {
                 restore-on-system-startup:= CheckBox {
-                    text: "Restore on System Startup";
+                    text: @tr("restore-on-system-startup-settings-option");
                     checked: settings.restore-on-system-startup;
                     toggled => {
                         new_settings.restore-on-system-startup = self.checked;
                     }
                 }
                 confirm-to-delete-pipe:= CheckBox {
-                    text: "Confirm to Delete Pipe";
+                    text: @tr("confirm-to-delete-pipe-settings-option");
                     checked: settings.confirm-to-delete-pipe;
                     toggled => {
                         new_settings.confirm-to-delete-pipe = self.checked;
@@ -73,7 +73,7 @@ export component SettingsPage inherits VerticalLayout
 
     HorizontalBox {
         Button {
-            text: "Apply";
+            text: @tr("apply-btn");
             enabled: settings != new_settings;
             clicked => {
                 settings = new_settings;
@@ -81,7 +81,7 @@ export component SettingsPage inherits VerticalLayout
             }
         }
         Button {
-            text: settings!= new_settings? "Undo changes" : "Go back";
+            text: settings!= new_settings? @tr("undo-changes-btn") : @tr("go-back-btn");
             clicked => {
                 if settings != new_settings {
                     new_settings = settings;

@@ -53,13 +53,13 @@ export component MainPage inherits VerticalLayout
     HorizontalBox {
         Rectangle {}
         Button {
-            text: "Settings";
+            text: @tr("settings-btn");
             clicked => {
                 set_page(1)
             }
         }
         Button {
-            text: "New pipe";
+            text: @tr("new-pipe-btn");
             clicked => {
                 create_pipe()
             }

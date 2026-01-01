@@ -7,24 +7,24 @@ export component FirstRunPage inherits VerticalBox
 
     Rectangle {}
     Text {
-        text: "By default, pipes do not persist after restarting the computer.";
+        text: @tr("pipes-doesnt-persist-msg");
             horizontal-alignment: center;
     }
     Text {
-        text: "Would you like VirtualPipe to start with the system to restore the Pipes?";
+        text: @tr("restore-with-system-question-msg");
         horizontal-alignment: center;
         font-weight: 700;
     }
     HorizontalBox {
         Rectangle {}
         Button {
-            text: "No";
+            text: @tr("restore-with-system-decline-btn");
             clicked => {
                 set_page(0);
             }
         }
         Button {
-            text: "Restore Pipes with system";
+            text: @tr("restore-with-system-confirm-btn");
             clicked => {
                 restore_with_system();
             }
@@ -32,13 +32,13 @@ export component FirstRunPage inherits VerticalBox
         Rectangle {}
     }
     Text {
-        text: "This can be changed in the settings.";
+        text: @tr("this-can-be-changed-in-settings-msg");
         opacity: 0.5;
         horizontal-alignment: center;
     }
     Rectangle {}
     Text {
-        text: "For OS auto-start, use the `--restore-only` flag to restore Pipes without the GUI.";
+        text: @tr("manual-autostart-msg");
         font-size: 10px;
         opacity: 0.5;
         horizontal-alignment: center;

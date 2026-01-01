@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>net.viniadrii.VirtualPipe</id>
+  <launchable type="desktop-id">net.viniadrii.VirtualPipe.desktop</launchable>
+
+  <name>VirtualPipe</name>
+  <developer>
+    <name>Vinícius Adriel</name>
+  </developer>
+
+  <summary>Create linked virtual audio devices</summary>
+  <description>
+    <p>Allow create and manage virtual "Pipes"</p>
+    <p>Pipes are sets of linked virtual input/output devices.</p>
+    <p>They allow you to reroute audio, for example, from OBS to Discord, Meet, Zoom, and more.</p>
+  </description>
+
+  <content_rating type="oars-1.0" />
+
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </recommends>
+
+  <url type="contribute">https://github.com/ViniciusAdriel/VirtualPipe</url>
+  <url type="bugtracker">https://github.com/ViniciusAdriel/VirtualPipe/issues</url>
+
+  <project_license>GPL-3.0-only</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+</component>

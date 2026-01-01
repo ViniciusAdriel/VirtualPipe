@@ -12,7 +12,7 @@ modules:
       - install -Dm755 virtualpipe /app/bin/virtualpipe
     sources:
       - type: file
-        path: ../target/release/virtualpipe
+        path: target/release/virtualpipe
 
   - name: desktop
     buildsystem: simple
@@ -20,7 +20,7 @@ modules:
       - install -Dm644 net.viniadrii.VirtualPipe.desktop /app/share/applications/net.viniadrii.VirtualPipe.desktop
     sources:
       - type: file
-        path: ./net.viniadrii.VirtualPipe.desktop
+        path: net.viniadrii.VirtualPipe.desktop
 
   - name: icon
     buildsystem: simple
@@ -28,7 +28,7 @@ modules:
       - install -Dm644 scalable.svg /app/share/icons/hicolor/scalable/apps/net.viniadrii.VirtualPipe.svg
     sources:
       - type: file
-        path: ./icons/scalable.svg
+        path: build-assets/scalable.svg
 
   - name: metadata
     buildsystem: simple
@@ -36,7 +36,7 @@ modules:
       - install -Dm644 net.viniadrii.VirtualPipe.metainfo.xml /app/share/metainfo/net.viniadrii.VirtualPipe.metainfo.xml
     sources:
       - type: file
-        path: ./net.viniadrii.VirtualPipe.metainfo.xml
+        path: net.viniadrii.VirtualPipe.metainfo.xml
 
 finish-args:
   - --socket=wayland

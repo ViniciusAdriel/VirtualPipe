@@ -21,31 +21,23 @@ modules:
       append-path: /usr/lib/sdk/rust-stable/bin
       build-args:
         - --share=network
-    build-commands:
-      - cargo build --release
-      - install -Dm755 target/release/virtualpipe /app/bin/virtualpipe
     sources:
       - type:   git
         url:    https://github.com/ViniciusAdriel/VirtualPipe.git
         branch: master
-
-  - name: desktop
-    buildsystem: simple
     build-commands:
+      # Compile binary from Rust
+      - cargo build --release
+      - install -Dm755 target/release/virtualpipe \
+        /app/bin/virtualpipe
+      # Desktop
       - install -Dm644 net.viniadrii.VirtualPipe.desktop \
         /app/share/applications/net.viniadrii.VirtualPipe.desktop
-
-  - name: icon
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 scalable.svg \
+      # Icon (Scalable)
+      - install -Dm644 build-assets/scalable.svg \
         /app/share/icons/hicolor/scalable/apps/net.viniadrii.VirtualPipe.svg
-
-  - name: metadata
-    buildsystem: simple
-    build-commands:
+      # Metainfo
       - install -Dm644 net.viniadrii.VirtualPipe.metainfo.xml \
         /app/share/metainfo/net.viniadrii.VirtualPipe.metainfo.xml
-
 
 

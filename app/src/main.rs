@@ -1,3 +1,5 @@
+use i_slint_backend_winit::winit::{platform::x11::WindowAttributesExtX11, window::WindowAttributes};
+use i_slint_backend_winit::Backend;
 use std::rc::Rc;
 use slint::{
     Model, VecModel
@@ -16,6 +18,19 @@ slint::slint!(
 #[tokio::main]
 async fn main() -> anyhow::Result<()>
 {
+    let backend = Backend::builder()
+        .with_window_attributes_hook(move |attrs: WindowAttributes| {
+            // Fix missing icon on wayland.
+            attrs.with_name(
+                "net.viniadrii.VirtualPipe",
+                "net.viniadrii.VirtualPipe"
+            )
+        })
+        .build()
+        .unwrap();
+
+    slint::platform::set_platform(Box::new(backend))?;
+
     let args = cli::parse();
 
     let data_path = dirs::data_dir()

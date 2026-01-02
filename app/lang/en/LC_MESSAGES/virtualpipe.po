@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-01-01 03:45+0000\n"
-"PO-Revision-Date: 2026-01-01 01:12-0300\n"
+"POT-Creation-Date: 2026-01-02 02:44+0000\n"
+"PO-Revision-Date: 2026-01-01 23:59-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -12,107 +12,112 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.8\n"
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:18
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:19
 msgctxt "SettingsPage"
-msgid "restore-on-system-startup-settings-option"
+msgid "SettingsPage@app-language.opt"
+msgstr "Language"
+
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:36
+msgctxt "SettingsPage"
+msgid "SettingsPage@restore-on-system-startup-settings.opt"
 msgstr "Restore Pipes on system startup"
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:25
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:43
 msgctxt "SettingsPage"
-msgid "confirm-to-delete-pipe-settings-option"
-msgstr "Confirm Pipe deletion"
+msgid "SettingsPage@confirm-to-delete-pipe-settings.opt"
+msgstr "Confirm pipe deletion"
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:76
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:94
 msgctxt "SettingsPage"
-msgid "apply-btn"
+msgid "SettingsPage@apply.btn"
 msgstr "Apply"
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:84
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:102
 msgctxt "SettingsPage"
-msgid "undo-changes-btn"
+msgid "SettingsPage@undo-changes.btn"
 msgstr "Undo"
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:84
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:102
 msgctxt "SettingsPage"
-msgid "go-back-btn"
+msgid "SettingsPage@go-back.btn"
 msgstr "Back"
 
-#: ui/components/00.MainPage/MainPage.slint:56
+#: ../ui/components/00.MainPage/MainPage.slint:56
 msgctxt "MainPage"
-msgid "settings-btn"
+msgid "MainPage@settings.btn"
 msgstr "Settings"
 
-#: ui/components/00.MainPage/MainPage.slint:62
+#: ../ui/components/00.MainPage/MainPage.slint:62
 msgctxt "MainPage"
-msgid "new-pipe-btn"
+msgid "MainPage@create-pipe.btn"
 msgstr "Create Pipe"
 
-#: ui/components/00.MainPage/components/Card.slint:80
+#: ../ui/components/00.MainPage/components/Card.slint:80
 msgctxt "Card"
-msgid "remove-btn"
+msgid "PipeCard@remove.btn"
 msgstr "Remove"
 
-#: ui/components/00.MainPage/components/Card.slint:102
+#: ../ui/components/00.MainPage/components/Card.slint:102
 msgctxt "Card"
-msgid "nothing-changes-until-apply-msg"
-msgstr "Nothing will change until 'Apply' is pressed."
+msgid "PipeCard@no-changes-until-apply.msg"
+msgstr "No changes will take effect until “Apply” is pressed."
 
-#: ui/components/00.MainPage/components/Card.slint:111
+#: ../ui/components/00.MainPage/components/Card.slint:111
 msgctxt "Card"
-msgid "cancel-option"
+msgid "PipeCard@cancel.btn"
 msgstr "Cancel"
 
-#: ui/components/00.MainPage/components/Card.slint:126
+#: ../ui/components/00.MainPage/components/Card.slint:126
 msgctxt "Card"
-msgid "apply-option"
+msgid "PipeCard@apply.btn"
 msgstr "Apply"
 
-#: ui/components/00.MainPage/components/Card.slint:159
+#: ../ui/components/00.MainPage/components/Card.slint:159
 msgctxt "Card"
-msgid "remove-pipe-dialog-cancel-btn"
+msgid "PipeDeleteDialog@cancel.btn"
 msgstr "Cancel"
 
-#: ui/components/00.MainPage/components/Card.slint:170
+#: ../ui/components/00.MainPage/components/Card.slint:170
 msgctxt "Card"
-msgid "remove-pipe-dialog-remove-btn"
-msgstr "Delete Pipe"
+msgid "PipeDeleteDialog@confirm.btn"
+msgstr "Remove Pipe"
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:10
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:10
 msgctxt "FirstRunPage"
-msgid "pipes-doesnt-persist-msg"
-msgstr "By default, Pipes are not kept after system restart."
+msgid "FirstRunPage@pipes-doesnt-persist.msg"
+msgstr "By default, Pipes are not preserved after restarting the system."
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:14
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:14
 msgctxt "FirstRunPage"
-msgid "restore-with-system-question-msg"
-msgstr "Should VirtualPipe restore Pipes automatically on system startup?"
+msgid "FirstRunPage@ask-restore-pipes.msg"
+msgstr "Do you want VirtualPipe to automatically restore Pipes on system startup?"
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:21
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:21
 msgctxt "FirstRunPage"
-msgid "restore-with-system-decline-btn"
+msgid "FirstRunPage@decline.btn"
 msgstr "No"
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:27
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:27
 msgctxt "FirstRunPage"
-msgid "restore-with-system-confirm-btn"
-msgstr "Restore with system"
+msgid "FirstRunPage@confirm.btn"
+msgstr "Restore on system startup"
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:35
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:35
 msgctxt "FirstRunPage"
-msgid "this-can-be-changed-in-settings-msg"
-msgstr "This can be changed in settings later."
+msgid "FirstRunPage@can-be-changed-later.msg"
+msgstr "This can be changed later in the settings."
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:41
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:41
 msgctxt "FirstRunPage"
-msgid "manual-autostart-msg"
-msgstr "Use '--restore-only' in autostart to restore Pipes without opening the GUI."
+msgid "FirstRunPage@manual-autostart.msg"
+msgstr "Use the “--restore-only” flag in the autostart configuration to restore Pipes without opening the GUI."
 
-#: ui/main.slint:18
+#: ../ui/main.slint:18
 msgctxt "MainWindow"
-msgid "first-run"
+msgid "Title@first-run"
 msgstr "First Run"
 
-#: ui/main.slint:19
+#: ../ui/main.slint:19
 msgctxt "MainWindow"
-msgid "settings"
+msgid "Title@settings"
 msgstr "Settings"

@@ -20,14 +20,17 @@ panic = "abort"
 slint-build = "1.14"
 
 [dependencies]
-anyhow     = "1.0"
-serde      = "1.0"
-serde_json = "1.0"
-dirs       = "6.0"
-ashpd      = "0.12"
-tokio = { version = "1", features = ["macros"] }
-i-slint-backend-winit = "1.14.0"
+anyhow                = "1.0"
+serde                 = "1.0"
+serde_json            = "1.0"
+dirs                  = "6.0"
+ashpd                 = "0.12"
+sys-locale            = "0.3"
 slint-build           = "1.14"
+i-slint-backend-winit = "1.14.0"
+tokio   =   { version = "1", features = ["macros"] }
+
+
 
 [dependencies.clap]
 version = "4.5"

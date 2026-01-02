@@ -7,24 +7,24 @@ export component FirstRunPage inherits VerticalBox
 
     Rectangle {}
     Text {
-        text: @tr("pipes-doesnt-persist-msg");
+        text: @tr("FirstRunPage@pipes-doesnt-persist.msg");
             horizontal-alignment: center;
     }
     Text {
-        text: @tr("restore-with-system-question-msg");
+        text: @tr("FirstRunPage@ask-restore-pipes.msg");
         horizontal-alignment: center;
         font-weight: 700;
     }
     HorizontalBox {
         Rectangle {}
         Button {
-            text: @tr("restore-with-system-decline-btn");
+            text: @tr("FirstRunPage@decline.btn");
             clicked => {
                 set_page(0);
             }
         }
         Button {
-            text: @tr("restore-with-system-confirm-btn");
+            text: @tr("FirstRunPage@confirm.btn");
             clicked => {
                 restore_with_system();
             }
@@ -32,13 +32,13 @@ export component FirstRunPage inherits VerticalBox
         Rectangle {}
     }
     Text {
-        text: @tr("this-can-be-changed-in-settings-msg");
+        text: @tr("FirstRunPage@can-be-changed-later.msg");
         opacity: 0.5;
         horizontal-alignment: center;
     }
     Rectangle {}
     Text {
-        text: @tr("manual-autostart-msg");
+        text: @tr("FirstRunPage@manual-autostart.msg");
         opacity: 0.5;
         horizontal-alignment: center;
     }

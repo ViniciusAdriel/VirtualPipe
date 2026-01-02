@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-01-01 03:45+0000\n"
+"POT-Creation-Date: 2026-01-02 02:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,108 +12,113 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:18
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:19
 msgctxt "SettingsPage"
-msgid "restore-on-system-startup-settings-option"
+msgid "SettingsPage@app-language.opt"
 msgstr ""
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:25
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:36
 msgctxt "SettingsPage"
-msgid "confirm-to-delete-pipe-settings-option"
+msgid "SettingsPage@restore-on-system-startup-settings.opt"
 msgstr ""
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:76
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:43
 msgctxt "SettingsPage"
-msgid "apply-btn"
+msgid "SettingsPage@confirm-to-delete-pipe-settings.opt"
 msgstr ""
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:84
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:94
 msgctxt "SettingsPage"
-msgid "undo-changes-btn"
+msgid "SettingsPage@apply.btn"
 msgstr ""
 
-#: ui/components/01.SettingsPage/SettingsPage.slint:84
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:102
 msgctxt "SettingsPage"
-msgid "go-back-btn"
+msgid "SettingsPage@undo-changes.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/MainPage.slint:56
+#: ../ui/components/01.SettingsPage/SettingsPage.slint:102
+msgctxt "SettingsPage"
+msgid "SettingsPage@go-back.btn"
+msgstr ""
+
+#: ../ui/components/00.MainPage/MainPage.slint:56
 msgctxt "MainPage"
-msgid "settings-btn"
+msgid "MainPage@settings.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/MainPage.slint:62
+#: ../ui/components/00.MainPage/MainPage.slint:62
 msgctxt "MainPage"
-msgid "new-pipe-btn"
+msgid "MainPage@create-pipe.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/components/Card.slint:80
+#: ../ui/components/00.MainPage/components/Card.slint:80
 msgctxt "Card"
-msgid "remove-btn"
+msgid "PipeCard@remove.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/components/Card.slint:102
+#: ../ui/components/00.MainPage/components/Card.slint:102
 msgctxt "Card"
-msgid "nothing-changes-until-apply-msg"
+msgid "PipeCard@no-changes-until-apply.msg"
 msgstr ""
 
-#: ui/components/00.MainPage/components/Card.slint:111
+#: ../ui/components/00.MainPage/components/Card.slint:111
 msgctxt "Card"
-msgid "cancel-option"
+msgid "PipeCard@cancel.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/components/Card.slint:126
+#: ../ui/components/00.MainPage/components/Card.slint:126
 msgctxt "Card"
-msgid "apply-option"
+msgid "PipeCard@apply.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/components/Card.slint:159
+#: ../ui/components/00.MainPage/components/Card.slint:159
 msgctxt "Card"
-msgid "remove-pipe-dialog-cancel-btn"
+msgid "PipeDeleteDialog@cancel.btn"
 msgstr ""
 
-#: ui/components/00.MainPage/components/Card.slint:170
+#: ../ui/components/00.MainPage/components/Card.slint:170
 msgctxt "Card"
-msgid "remove-pipe-dialog-remove-btn"
+msgid "PipeDeleteDialog@confirm.btn"
 msgstr ""
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:10
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:10
 msgctxt "FirstRunPage"
-msgid "pipes-doesnt-persist-msg"
+msgid "FirstRunPage@pipes-doesnt-persist.msg"
 msgstr ""
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:14
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:14
 msgctxt "FirstRunPage"
-msgid "restore-with-system-question-msg"
+msgid "FirstRunPage@ask-restore-pipes.msg"
 msgstr ""
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:21
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:21
 msgctxt "FirstRunPage"
-msgid "restore-with-system-decline-btn"
+msgid "FirstRunPage@decline.btn"
 msgstr ""
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:27
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:27
 msgctxt "FirstRunPage"
-msgid "restore-with-system-confirm-btn"
+msgid "FirstRunPage@confirm.btn"
 msgstr ""
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:35
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:35
 msgctxt "FirstRunPage"
-msgid "this-can-be-changed-in-settings-msg"
+msgid "FirstRunPage@can-be-changed-later.msg"
 msgstr ""
 
-#: ui/components/02.FirstRunPage/FirstRunPage.slint:41
+#: ../ui/components/02.FirstRunPage/FirstRunPage.slint:41
 msgctxt "FirstRunPage"
-msgid "manual-autostart-msg"
+msgid "FirstRunPage@manual-autostart.msg"
 msgstr ""
 
-#: ui/main.slint:18
+#: ../ui/main.slint:18
 msgctxt "MainWindow"
-msgid "first-run"
+msgid "Title@first-run"
 msgstr ""
 
-#: ui/main.slint:19
+#: ../ui/main.slint:19
 msgctxt "MainWindow"
-msgid "settings"
+msgid "Title@settings"
 msgstr ""
 

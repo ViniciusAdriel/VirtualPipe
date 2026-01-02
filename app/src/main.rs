@@ -6,6 +6,7 @@ use slint::{
     Model, VecModel
 };
 use std::rc::Rc;
+use std::sync::mpsc;
 mod settings;
 mod pipelist;
 mod pipe;
@@ -258,15 +259,19 @@ async fn main() -> anyhow::Result<()>
 
     main_window.invoke_update_pipelist_file();
 
-    // Get settings from settings.json
+    // Settings
     main_window.on_apply_settings({
         move |settings| {
             let settings = settings.clone();
             let cnfg_path = cnfg_path.clone();
 
+            let (tx, rx) = mpsc::channel();
+
             tokio::spawn(async move {
                 match settings::apply(&settings).await {
-                    Ok(_) => {
+                    Ok(l) => {
+                        tx.send(l).unwrap(); 
+
                         if let Err(e) = settings::save::to_file(
                             cnfg_path.join("settings.json"),
                             &settings,
@@ -279,6 +284,14 @@ async fn main() -> anyhow::Result<()>
                     }
                 }
             });
+            
+            let lang = rx.recv().unwrap();
+
+            match slint::select_bundled_translation(lang.as_str()) {
+                Ok(_) => (),
+                Err(e) => eprintln!("Error applying '{}' language: {}", lang, e)
+            };
+            
         }
     });
 

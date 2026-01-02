@@ -27,6 +27,12 @@ pub fn from_file(file_path: PathBuf) -> Settings
             .get("first_run")
             .and_then(|v| v.as_bool())
             .unwrap_or(true),
+        
+        app_language: v
+            .get("app_language")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .into(),
 
         restore_on_system_startup: v
             .get("restore_on_system_startup")

@@ -77,7 +77,7 @@ export component Card inherits Rectangle
 
                 TouchArea {
                     Text {
-                        text: @tr("remove-btn");
+                        text: @tr("PipeCard@remove.btn");
                         color: parent.has-hover? #912: Palette.foreground;
                     }
                     clicked => {
@@ -99,7 +99,7 @@ export component Card inherits Rectangle
                 padding: 0;
 
                 Text {
-                    text: @tr("nothing-changes-until-apply-msg");
+                    text: @tr("PipeCard@no-changes-until-apply.msg");
                     opacity: 0.25;
                 }
 
@@ -108,7 +108,7 @@ export component Card inherits Rectangle
                 // If it cancels, return the object to its original state.
                 TouchArea {
                     Text {
-                        text: @tr("cancel-option");
+                        text: @tr("PipeCard@cancel.btn");
                         color: parent.has-hover? Palette.accent-background: Palette.foreground;
                     }
                     clicked => {
@@ -123,7 +123,7 @@ export component Card inherits Rectangle
                 // If it applies, change the card object too.
                 TouchArea {
                     Text {
-                        text: @tr("apply-option");
+                        text: @tr("PipeCard@apply.btn");
                         font-weight: 800;
                         color: parent.has-hover? Palette.accent-background: Palette.foreground;
                     }
@@ -156,7 +156,7 @@ export component Card inherits Rectangle
                         background: Palette.background;
                         border-radius: 4px;
                         Button {
-                            text: @tr("remove-pipe-dialog-cancel-btn");
+                            text: @tr("PipeDeleteDialog@cancel.btn");
                             clicked => {
                                 delete_dialog = false;
                             }
@@ -167,7 +167,7 @@ export component Card inherits Rectangle
                         background: #912;
                         border-radius: 4px;
                         Button {
-                            text: @tr("remove-pipe-dialog-remove-btn");
+                            text: @tr("PipeDeleteDialog@confirm.btn");
                             clicked => {
                                 remove_pipe(pipe)
                             }

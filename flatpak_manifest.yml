@@ -28,16 +28,16 @@ modules:
     build-commands:
       # Compile binary from Rust
       - cargo build --release
-      - install -Dm755 target/release/virtualpipe \
+      - install -Dm755 target/release/virtualpipe
         /app/bin/virtualpipe
       # Desktop
-      - install -Dm644 net.viniadrii.VirtualPipe.desktop \
+      - install -Dm644 net.viniadrii.VirtualPipe.desktop
         /app/share/applications/net.viniadrii.VirtualPipe.desktop
       # Icon (Scalable)
-      - install -Dm644 build-assets/scalable.svg \
+      - install -Dm644 build-assets/scalable.svg
         /app/share/icons/hicolor/scalable/apps/net.viniadrii.VirtualPipe.svg
       # Metainfo
-      - install -Dm644 net.viniadrii.VirtualPipe.metainfo.xml \
+      - install -Dm644 net.viniadrii.VirtualPipe.metainfo.xml
         /app/share/metainfo/net.viniadrii.VirtualPipe.metainfo.xml
 
 
